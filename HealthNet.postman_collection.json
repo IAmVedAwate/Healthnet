@@ -1,0 +1,856 @@
+{
+	"info": {
+		"_postman_id": "24fb52df-cf9e-48ae-b0df-5cecc4577d04",
+		"name": "HealthNet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34683782"
+	},
+	"item": [
+		{
+			"name": "Hospital",
+			"item": [
+				{
+					"name": "hospital Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/hospitals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hospitals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hospital Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hospitalName\": \"Just Hospital\",\n    \"hospitalLocation\": \"Hingewadi PHASE-1, Pune\",\n    \"hospitalContactInfo\": \"9970000000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/hospitals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hospitals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hospital Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/hospitals/67b30031b631337b2c444e58",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hospitals",
+								"67b30031b631337b2c444e58"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hospital Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hospitalName\": \"Netra Hospital\",\n    \"hospitalLocation\": \"Hingewadi PHASE-1, Pune\",\n    \"hospitalContactInfo\": \"9423270000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/hospitals/67b2ff9bb631337b2c444e52",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hospitals",
+								"67b2ff9bb631337b2c444e52"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "hospital Del",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/hospitals/67b301e2fda8e84b07f3bbef",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"hospitals",
+								"67b301e2fda8e84b07f3bbef"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bed",
+			"item": [
+				{
+					"name": "bed Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"hospital\": \"67b2fdb4ba2a4a398b27567f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/beds",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"beds"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bed Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hospital\":\"67b2fdb4ba2a4a398b27567f\",\n    \"ward\": \"A\",\n    \"type\": \"ICU\",\n    \"status\": \"Occupied\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/beds/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"beds",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bed Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/beds/67b30745297bbe6f9978d6ea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"beds",
+								"67b30745297bbe6f9978d6ea"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bed Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"hospital\":\"67b2fdb4ba2a4a398b27567f\",\n    \"ward\": \"A\",\n    \"type\": \"ICU\",\n    \"status\": \"Unoccupied\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/beds/67b30745297bbe6f9978d6ea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"beds",
+								"67b30745297bbe6f9978d6ea"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bed Del",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/beds/67b30745297bbe6f9978d6ea",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"beds",
+								"67b30745297bbe6f9978d6ea"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Doctor",
+			"item": [
+				{
+					"name": "doctor Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"hospital\": \"67b2fdb4ba2a4a398b27567f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/doctors",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"doctors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "doctor Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hospital\": \"67b2fdb4ba2a4a398b27567f\",\n  \"name\":\"Manisha Awate\",\n  \"specialization\":\"MBBS\",\n  \"department\":\"Cardiology\",\n  \"contactInfo\":\"7447669886\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/doctors/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"doctors",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "doctor Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/doctors/67b30b6a5bc52498c10f2798",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"doctors",
+								"67b30b6a5bc52498c10f2798"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "doctor Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hospital\": \"67b2fdb4ba2a4a398b27567f\",\n  \"name\":\"Manisha Awate\",\n  \"specialization\":\"MBBS, PhD.Biology\",\n  \"contactInfo\":\"7447669886\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/doctors/67b30b6a5bc52498c10f2798",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"doctors",
+								"67b30b6a5bc52498c10f2798"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "doctor Del",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/doctors/67b30b6a5bc52498c10f2798",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"doctors",
+								"67b30b6a5bc52498c10f2798"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Patient",
+			"item": [
+				{
+					"name": "patient Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient Post Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Ved Awate\",\n  \"age\":\"21\",\n  \"gender\":\"Male\",\n  \"contactInfo\":\"7038550000\",\n  \"doctor\":\"67b30b2b5bc52498c10f2794\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient Post Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Ved Awate\",\n  \"age\":\"21\",\n  \"gender\":\"Male\",\n  \"contactInfo\":\"7038550000\",\n  \"bed\":{\n    \"_id\": \"67b3077d297bbe6f9978d6f0\",\n    \"ward\": \"A\",\n    \"type\": \"ICU\",\n    \"status\": \"Occupied\",\n    \"hospital\": \"67b2fdb4ba2a4a398b27567f\",\n    \"patient\": null,\n    \"__v\": 0\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/add/67b3186527413009a301c02b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"add",
+								"67b3186527413009a301c02b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/67b3186527413009a301c02b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"67b3186527413009a301c02b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Manisha Awate\",\n  \"age\":\"47\",\n  \"gender\":\"Female\",\n  \"contactInfo\":\"7447669886\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/patients/67b3186527413009a301c02b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"67b3186527413009a301c02b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "patient Del",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/patients/67b319b1a829cc3b7970e1a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"patients",
+								"67b319b1a829cc3b7970e1a3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "inventory Get All",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"hospital\":\"67b2fdb4ba2a4a398b27567f\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/inventories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"inventories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inventory Post",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\":\"Sinarest\",\n  \"quantity\":2,\n  \"expiryDate\":\"2025-12-18\",\n  \"hospital\":\"67b2fdb4ba2a4a398b27567f\",\n  \"patient\":\"67b32f30272cc7ffef3ca92d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/inventories/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"inventories",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inventory Del",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/inventories/remove/67b32f9f272cc7ffef3ca938",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"inventories",
+								"remove",
+								"67b32f9f272cc7ffef3ca938"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inventory Get Medicine By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/inventories/67b32f92272cc7ffef3ca934",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"inventories",
+								"67b32f92272cc7ffef3ca934"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "inventory Put",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 5,\n  \"expiryDate\": \"2025-12-31\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/inventories/67b3337537ca4410ef21cab5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"inventories",
+								"67b3337537ca4410ef21cab5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Queue",
+			"item": [
+				{
+					"name": "queue Get All Fetch Beds",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MzRhZGIxMTdjZTU3YTU5YWVjNDUwNCIsImVtYWlsIjoidmF3YXRlQGdtYWlsLmNvbSIsImlhdCI6MTcxNDcyODM2OSwiZXhwIjoxNzE0NzMxOTY5fQ.vBKiTHTiEUVD5AAuzl3LaiHH9cxyg_P13Z0lxmfr2yc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"patientID\": \"1234\",\r\n    \"name\": \"Pranav\",\r\n    \"department\": \"cardiology\",\r\n    \"status\": \"waiting\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/queues/beds/67b2fdb4ba2a4a398b27567f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"queues",
+								"beds",
+								"67b2fdb4ba2a4a398b27567f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "queue Get All Appointments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "access-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MzRhZGIxMTdjZTU3YTU5YWVjNDUwNCIsImVtYWlsIjoidmF3YXRlQGdtYWlsLmNvbSIsImlhdCI6MTcxNDcyODM2OSwiZXhwIjoxNzE0NzMxOTY5fQ.vBKiTHTiEUVD5AAuzl3LaiHH9cxyg_P13Z0lxmfr2yc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"patientID\": \"1234\",\r\n    \"name\": \"Pranav\",\r\n    \"department\": \"cardiology\",\r\n    \"status\": \"waiting\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/queues/beds/67b2fdb4ba2a4a398b27567f",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"queues",
+								"beds",
+								"67b2fdb4ba2a4a398b27567f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Ved\",\r\n    \"contactNo\":7038558620,\r\n    \"message\":\"Hi There, I need you!\",\r\n    \"patient\":\"67b3186527413009a301c02b\",\r\n    \"hospital\":\"67b2fdb4ba2a4a398b27567f\",\r\n    \"doctor\":\"67b43b7d84598cf5f5502575\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/queues/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"queues",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
