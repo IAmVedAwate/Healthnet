@@ -33,9 +33,9 @@ function Navigation() {
                   <li className="nav-item">
                     <Link to={"/doctor/get"} className="nav-link text-dark">Doctors</Link>
                   </li>
-                  {/* <li className="nav-item">
-                    <Link to={"/inventory/get"} className="nav-link text-dark">Inventory</Link>
-                  </li> */}
+                  <li className="nav-item">
+                    <Link to={"/room/get"} className="nav-link text-dark">Hospital Management</Link>
+                  </li>
                   <li className="nav-item">
                     <Link to={"/patient/get"} className="nav-link text-dark">Patients</Link>
                   </li>
@@ -43,7 +43,7 @@ function Navigation() {
               {/* )} */}
             </ul>
             <div>
-              {/* {!token ? (
+              {!token ? (
                 <>
                   <Link to={"/signup"} className="btn btn-outline-primary ms-auto me-1">Register</Link>
                   <Link to={"/login"} className="btn btn-outline-success ms-auto">Login</Link>
@@ -56,7 +56,7 @@ function Navigation() {
                 }}>
                   Logout
                 </button>
-              )} */}
+              )}
             </div>
           </div>
         </div>

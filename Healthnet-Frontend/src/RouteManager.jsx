@@ -44,31 +44,14 @@ const RouteManager = () => {
           <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
           <Route path="/hospital/get" element={<GetAllHospitals />} />
           <Route path="/hospital/getByid/:hospitalid" element={<GetHospitalById />} />
-          <Route path="/queue/add/:hospitalid" element={<AddToQueue />} />
         </>
       {role === 'Hospital' && (
         <>
-          <Route path="/bed/get" element={<GetAllBeds />} />
-          <Route path="/bed/add" element={<AddBed />} />
-          <Route path="/bed/update/:bedid" element={<UpdateBed />} />
           <Route path="/doctor/get" element={<GetAllDoctors />} />
           <Route path="/doctor/add" element={<AddDoctor />} />
           <Route path="/doctor/update/:doctorid" element={<UpdateDoctor />} />
           <Route path="/doctor/delete" element={<DeleteDoctor />} />
           <Route path="/doctor/getByid/:doctorid" element={<GetDoctorById />} />
-          <Route path="/inventory/get" element={<GetAllInventoryItems />} />
-          <Route path="/inventory/add" element={<AddMedicine />} />
-          <Route path="/inventory/update/:inventoryid" element={<UpdateMedicine />} />
-          <Route path="/nurse/get" element={<GetAllNurses />} />
-          <Route path="/nurse/add" element={<AddNurse />} />
-          <Route path="/nurse/update" element={<UpdateNurse />} />
-          <Route path="/nurse/getByid" element={<GetNurseById />} />
-          <Route path="/patient/get" element={<GetAllPatients />} />
-          <Route path="/patient/add" element={<AddPatient />} />
-          <Route path="/patient/update/:patientid" element={<UpdatePatient />} />
-          <Route path="/patient/getByid/:patientid" element={<GetPatientById />} />
-          <Route path="/queue/get" element={<GetAllQueues />} />
-          <Route path="/queue/update/status" element={<UpdateQueueStatus />} />
         </>
       )}
       {role === 'patient' && (

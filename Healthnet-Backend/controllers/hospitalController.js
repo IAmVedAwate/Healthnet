@@ -12,7 +12,7 @@ const getAllHospitals = async (req, res) => {
     
     for (let hospital of hospitals) {
       const countRow = await dbGet(
-        "SELECT COUNT(*) AS count FROM Queue WHERE hospitalId = ?",
+        "SELECT COUNT(*) AS count FROM Appointment WHERE hospitalId = ?",
         [hospital.hospitalId]
       );
       
