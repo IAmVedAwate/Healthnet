@@ -28,9 +28,12 @@ import FetchBedAvailability from './components/queue/FetchBedAvailability';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import ResetPassword from './components/auth/ResetPassword';
+
 import Home from './components/auth/Home';
 import ManageBeds from './components/hospital/ManageBeds';
 import ManageRooms from './components/hospital/ManageRooms';
+import ForgetPassword from './components/auth/ForgetPassword';
+import DoctorSlotManager from './components/doctor/DoctorSlotManager';
 
 const RouteManager = () => {
   const token = localStorage.getItem('token');
@@ -52,6 +55,8 @@ const RouteManager = () => {
           <Route path="/doctor/update/:doctorid" element={<UpdateDoctor />} />
           <Route path="/doctor/delete" element={<DeleteDoctor />} />
           <Route path="/doctor/getByid/:doctorid" element={<GetDoctorById />} />
+          <Route path="/doctor/dashboard/:doctorid" element={<DoctorSlotManager />} />
+          
         </>
       )}
       {role === 'patient' && (
@@ -62,7 +67,8 @@ const RouteManager = () => {
       )}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/reset/password" element={<ResetPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/forget-password" element={<ForgetPassword />} />
     </Routes>
   );
 };

@@ -100,12 +100,26 @@ function createTables() {
         specialization TEXT,
         qualification TEXT,
         experience INTEGER,
+        authPin TEXT NOT NULL, -- new field for authentication pin
+        isActive INTEGER DEFAULT 1, -- 1 for active, 0 for inactive
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId),
         FOREIGN KEY (departmentId) REFERENCES Department(departmentId)
       );
     `, (err) => { if (err) console.error("Error creating Doctor table:", err.message); });
+
+      // Create DoctorSlot table
+db.run(`
+  CREATE TABLE IF NOT EXISTS DoctorSlot (
+    slotId TEXT PRIMARY KEY,
+    doctorId TEXT NOT NULL,
+    startTime TEXT NOT NULL,
+    endTime TEXT NOT NULL,
+    isActive INTEGER NOT NULL DEFAULT 0,
+    FOREIGN KEY (doctorId) REFERENCES Doctor(doctorId)
+  )
+`, (err) => { if (err) console.error("Error creating Doctor Slot table:", err.message); });
 
     // Appointment table: Hospital-Department-Doctor-Appointments
     db.run(`

@@ -11,7 +11,7 @@ const dbAll = promisify(db.all).bind(db);
 /**
  * POST /api/doctors
  * Adds a new doctor record.
- * Expects doctor's details in req.body.
+ * Expects doctor's details in req.body including authPin.
  */
 const addDoctor = async (req, res) => {
   try {
@@ -25,15 +25,20 @@ const addDoctor = async (req, res) => {
       specialization,
       qualification,
       experience,
+      authPin  // new field required for doctor authentication pin
     } = req.body;
+
+    if (!authPin) {
+      return res.status(400).json({ message: 'authPin is required' });
+    }
 
     const doctorId = uuidv4();
 
     const query = `
       INSERT INTO Doctor 
-        (doctorId, hospitalId, departmentId, firstName, lastName, email, phoneNumber, specialization, qualification, experience, createdAt, updatedAt)
+        (doctorId, hospitalId, departmentId, firstName, lastName, email, phoneNumber, specialization, qualification, experience, authPin, createdAt, updatedAt)
       VALUES 
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `;
     await dbRun(query, [
       doctorId,
@@ -46,6 +51,7 @@ const addDoctor = async (req, res) => {
       specialization,
       qualification,
       experience,
+      authPin
     ]);
 
     // Return the created doctor object.
@@ -77,7 +83,7 @@ const getDoctorById = async (req, res) => {
 /**
  * PUT /api/doctors/:id
  * Updates an existing doctor record.
- * Expects updated fields in req.body.
+ * Expects updated fields in req.body; can include authPin and isActive.
  */
 const updateDoctor = async (req, res) => {
   try {
@@ -92,8 +98,11 @@ const updateDoctor = async (req, res) => {
       specialization,
       qualification,
       experience,
+      authPin,   // new field for updating doctor's authentication pin
+      isActive   // new field for updating availability status (optional)
     } = req.body;
 
+    // Build the update query. We assume authPin is required for update as well.
     const updateQuery = `
       UPDATE Doctor
       SET hospitalId = ?,
@@ -105,10 +114,12 @@ const updateDoctor = async (req, res) => {
           specialization = ?,
           qualification = ?,
           experience = ?,
+          authPin = ?,
+          isActive = COALESCE(?, isActive),
           updatedAt = CURRENT_TIMESTAMP
       WHERE doctorId = ?
     `;
-    const result = await dbRun(updateQuery, [
+    await dbRun(updateQuery, [
       hospitalId,
       departmentId,
       firstName,
@@ -118,11 +129,12 @@ const updateDoctor = async (req, res) => {
       specialization,
       qualification,
       experience,
+      authPin,
+      isActive,   // if not provided, COALESCE will leave the current value intact
       id,
     ]);
 
-    // Check if any row was updated. (dbRun doesn't return affectedRows reliably in SQLite,
-    // so we'll do a subsequent fetch.)
+    // Check if any row was updated by fetching the doctor record again.
     const doctor = await dbGet("SELECT * FROM Doctor WHERE doctorId = ?", [id]);
     if (!doctor) {
       return res.status(404).json({ message: 'Doctor not found' });
@@ -166,10 +178,63 @@ const getAllDoctors = async (req, res) => {
   }
 };
 
+const loginDoctorByPin = async (req, res) => {
+  try {
+    const { doctorid, pin } = req.body;
+
+    if (!doctorid || !pin) {
+      return res.status(400).json({ message: "Doctor ID and PIN are required." });
+    }
+
+    // Retrieve the doctor record by doctorId.
+    const doctor = await dbGet("SELECT * FROM Doctor WHERE doctorId = ?", [doctorid]);
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found." });
+    }
+
+    // Compare the provided PIN.
+    if (doctor.authPin !== pin) {
+      return res.status(401).json({ message: "Invalid PIN." });
+    }
+
+    // Successful authentication; return doctor details.
+    res.status(200).json({ message: "Doctor authenticated.", doctor, verified: true });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const toggleDoctorStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Retrieve current slot.
+    const slot = await dbGet("SELECT * FROM Doctor WHERE doctorId = ?", [id]);
+    if (!slot) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+    // Toggle status: if 1 then 0, if 0 then 1.
+    const newStatus = slot.isActive === 1 ? 0 : 1;
+    const updateQuery = `
+      UPDATE Doctor
+      SET isActive = ?
+      WHERE doctorId = ?
+    `;
+    await dbRun(updateQuery, [newStatus, id]);
+    const updatedSlot = await dbGet("SELECT * FROM Doctor WHERE doctorId = ?", [id]);
+    res.status(200).json(updatedSlot);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
   addDoctor,
   getDoctorById,
   updateDoctor,
   deleteDoctor,
   getAllDoctors,
+  loginDoctorByPin,
+  toggleDoctorStatus
 };

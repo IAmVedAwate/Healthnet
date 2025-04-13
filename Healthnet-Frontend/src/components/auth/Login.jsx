@@ -48,6 +48,8 @@ const Login = () => {
       setToken(res.data.token);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
+      console.log(res.data);
+      
       res.data.role == "Patient" ? localStorage.setItem('patientId', res.data.id): localStorage.setItem('hospitalId', res.data.id);
       navigate('/'); // Redirect after successful login
     } catch (err) {

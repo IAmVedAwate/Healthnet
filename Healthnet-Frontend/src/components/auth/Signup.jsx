@@ -69,7 +69,7 @@ const Signup = () => {
       alert(res.data.msg);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('role', res.data.role);
-      alert(res.data.id)
+      console.log(res.data)
       res.data.role == "Patient" ? localStorage.setItem('patientId', res.data.id): localStorage.setItem('hospitalId', res.data.id);
       navigate('/posts');
     } catch (err) {

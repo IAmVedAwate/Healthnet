@@ -59,7 +59,7 @@ createDefaultAdmin();
 const app = express();
 const corsOptions = {
   origin: 'http://localhost:5174',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
   credentials: true,
 };
 
@@ -80,6 +80,9 @@ app.use('/api/hospitals', hospitalRoutes);
 
 const doctorRoutes = require('./routes/doctorRoutes');
 app.use('/api/doctors', doctorRoutes);
+
+const doctorSlotRoutes = require('./routes/doctorSlotRoutes');
+app.use('/api/doctor', doctorSlotRoutes);
 
 const queueRoutes = require('./routes/queueRoutes');
 app.use('/api/queues', queueRoutes);

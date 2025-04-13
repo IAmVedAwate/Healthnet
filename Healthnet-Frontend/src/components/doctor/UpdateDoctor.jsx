@@ -18,6 +18,8 @@ const UpdateDoctor = () => {
     qualification: "",
     experience: "",
     hospitalId: "",
+    authPin: "",
+    isActive: 1, // default active status
   });
   
   // Fetch departments for the hospital.
@@ -49,6 +51,8 @@ const UpdateDoctor = () => {
           qualification: res.data.qualification || "",
           experience: res.data.experience || "",
           hospitalId: res.data.hospitalId || hospitalId,
+          authPin: res.data.authPin || "",
+          isActive: res.data.isActive !== undefined ? res.data.isActive : 1,
         });
       } catch (error) {
         console.error("Error fetching doctor:", error);
@@ -197,6 +201,32 @@ const UpdateDoctor = () => {
               onChange={handleChange}
               required
             />
+          </div>
+          {/* Authentication PIN */}
+          <div className="mb-3">
+            <label className="form-label">Authentication PIN</label>
+            <input
+              type="text"
+              className="form-control"
+              name="authPin"
+              value={formData.authPin}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          {/* Active status dropdown */}
+          <div className="mb-3">
+            <label className="form-label">Status</label>
+            <select
+              className="form-select"
+              name="isActive"
+              value={formData.isActive}
+              onChange={handleChange}
+              required
+            >
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
+            </select>
           </div>
           <button type="submit" className="btn btn-warning">
             Update

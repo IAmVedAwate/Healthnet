@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const GetAllDoctors = () => {
   const [doctors, setDoctors] = useState([]);
-  
-  // Function to fetch doctors for the hospital
+  const navigate = useNavigate();
+
   const fetchDoctors = () => {
     const hospitalId = localStorage.getItem("hospitalId");
     axios
@@ -18,7 +18,6 @@ const GetAllDoctors = () => {
       .catch((error) => console.error("Error fetching doctors:", error));
   };
 
-  // Delete doctor and refresh list
   const handleDelete = (doctorId) => {
     axios
       .delete(`http://localhost:5000/api/doctors/${doctorId}`, {
@@ -31,6 +30,10 @@ const GetAllDoctors = () => {
         fetchDoctors();
       })
       .catch((error) => console.error(error));
+  };
+
+  const handleEnterClick = (doctorId) => {
+    navigate(`/doctor/dashboard/${doctorId}`);
   };
 
   useEffect(() => {
@@ -74,19 +77,26 @@ const GetAllDoctors = () => {
                 <td>{doctor.specialization}</td>
                 <td>{doctor.phoneNumber}</td>
                 <td>{doctor.hospitalId}</td>
-                <td style={{ width: "160px" }} className="text-center">
+                <td style={{ width: "220px" }} className="text-center">
+                  <button
+                    onClick={() => handleEnterClick(doctor.doctorId)}
+                    className="btn btn-success px-2 mx-2"
+                  >
+                    Enter
+                  </button>
                   <Link
                     to={`/doctor/update/${doctor.doctorId}`}
-                    className="btn btn-primary px-3 mx-2"
+                    className="btn btn-primary px-3 mx-1"
                   >
-                    <i className="bi bi-plus-circle-fill"></i>
+                    <i className="bi bi-pencil-square"></i>
                   </Link>
                   <button
                     onClick={() => handleDelete(doctor.doctorId)}
-                    className="btn btn-danger px-3 mx-2"
+                    className="btn btn-danger px-3 mx-1"
                   >
-                    <i className="bi bi-trash-fill"></i>
+                    <i className="bi bi-trash"></i>
                   </button>
+                  
                 </td>
               </tr>
             ))}

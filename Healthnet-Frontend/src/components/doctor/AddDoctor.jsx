@@ -7,7 +7,6 @@ const AddDoctor = () => {
   const [hospitalId, setHospitalId] = useState(localStorage.getItem("hospitalId"));
   const [departments, setDepartments] = useState([]);
   
-  
   // Fetch departments for the hospital.
   useEffect(() => {
     if (hospitalId) {
@@ -20,7 +19,7 @@ const AddDoctor = () => {
     }
   }, [hospitalId]);
   
-  // Initialize form data.
+  // Initialize form data including new authPin
   const [formData, setFormData] = useState({
     departmentId: "",
     firstName: "",
@@ -31,6 +30,7 @@ const AddDoctor = () => {
     qualification: "",
     experience: "",
     hospitalId: "",
+    authPin: ""  // new field for authentication PIN
   });
   
   // Update formData with hospitalId.
@@ -48,6 +48,7 @@ const AddDoctor = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Adjust endpoint as needed; here we're assuming POST /api/doctors/add
       await axios.post("http://localhost:5000/api/doctors/add", formData, {
         headers: { "access-token": localStorage.getItem("token") },
       });
@@ -172,7 +173,17 @@ const AddDoctor = () => {
               required
             />
           </div>
-          {/* HospitalId is automatically set */}
+          {/* Authentication PIN */}
+          <div className="mb-3">
+            <label className="form-label">Authentication PIN</label>
+            <input
+              type="text"
+              className="form-control"
+              name="authPin"
+              onChange={handleChange}
+              required
+            />
+          </div>
           <button type="submit" className="btn btn-primary">
             Submit
           </button>
