@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Navigation() {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const [token, setToken] = useState(null);
+  const [role, setRole] = useState(null);
+
+  // Fetch token and role from localStorage on component mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedRole = localStorage.getItem('role');
+
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
+    if (storedRole) {
+      setRole(storedRole);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    window.location.href = '/';
+    setToken(null); // Clear the token from state
+    setRole(null); // Clear the role from state
+    window.location.href = '/'; // Redirect after logout
   };
 
   return (
@@ -74,6 +90,7 @@ function Navigation() {
 }
 
 export default Navigation;
+
 
 
 

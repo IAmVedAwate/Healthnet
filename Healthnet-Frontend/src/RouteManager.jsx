@@ -36,6 +36,7 @@ import ForgetPassword from './components/auth/ForgetPassword';
 import DoctorSlotManager from './components/doctor/DoctorSlotManager';
 import AdminDashboard from './components/admin/AdminDashboard';
 import HospitalSignup from './components/auth/HospitalSignup';
+import PatientSignup from './components/auth/PatientSignup';
 
 const RouteManager = () => {
   const token = localStorage.getItem('token');
@@ -74,7 +75,8 @@ const RouteManager = () => {
         <Route path="*" element={<Navigate to="/login" replace />} />
       )}
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path='/signup' element={<Signup />} />
+      <Route path="/patient-signup" element={<PatientSignup />} />
       <Route path="/hospital-signup" element={<HospitalSignup />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/forget-password" element={<ForgetPassword />} />
