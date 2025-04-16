@@ -37,6 +37,7 @@ import DoctorSlotManager from './components/doctor/DoctorSlotManager';
 import AdminDashboard from './components/admin/AdminDashboard';
 import HospitalSignup from './components/auth/HospitalSignup';
 import PatientSignup from './components/auth/PatientSignup';
+import DeletePatient from './components/patient/DeletePatient';
 
 const RouteManager = () => {
   const token = localStorage.getItem('token');
@@ -68,9 +69,16 @@ const RouteManager = () => {
           <Route path="/patient/add" element={<AddPatient />} />
         </>
       )}
-      {role === 'patient' && (
-        <Route path="/queue/bed/available" element={<FetchBedAvailability />} />
-      )}
+      {/* {role === 'patient' && ( */}
+        <>
+        <Route path="/patient/get" element={<GetAllPatients />} />
+        <Route path="/patient/add" element={<AddPatient />} />
+        <Route path="/patient/remove/:id" element={<DeletePatient />} />
+        <Route path="/patient/byId/:id" element={<GetPatientById />} />
+        <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
+        </>
+
+      {/* )} */}
       {!role && (
         <Route path="*" element={<Navigate to="/login" replace />} />
       )}

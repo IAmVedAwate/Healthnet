@@ -88,7 +88,7 @@ const GetAllPatients = () => {
 
   const fetchPatients = useCallback(() => {
     axios
-      .get("http://localhost:5000/api/patients/", {
+      .get("http://localhost:5000/api/patients/all", {
         headers: {
           "access-token": localStorage.getItem("token"),
         },
@@ -147,20 +147,20 @@ const GetAllPatients = () => {
           </thead>
           <tbody>
             {patients.map((patient) => (
-              <tr key={patient.patientID}>
-                <td>{patient.patientID}</td>
-                <td>{patient.username}</td>
+              <tr key={patient.patientDataId}>
+                <td>{patient.patientDataId}</td>
+                <td>{patient.name}</td>
                 <td>{patient.age}</td>
                 <td>{patient.gender}</td>
                 <td>{patient.contactInfo}</td>
-                <td>{patient.assignedDoctor}</td>
+                <td>{patient.doctorId}</td>
                 <td>{patient.status}</td>
                 <td style={{ width: "160px" }} className="text-center">
-                  <Link to={`/patient/update/${patient.patientID}`} className="btn btn-primary px-3 mx-2">
+                  <Link to={`/patient/edit/${patient.patientDataId}`} className="btn btn-primary px-3 mx-2">
                     <i className="bi bi-plus-circle-fill"></i>
                   </Link>
                   <button
-                    onClick={() => handleDelete(patient.patientID)}
+                    onClick={() => handleDelete(patient.patientDataId)}
                     className="btn btn-danger px-3 mx-2"
                   >
                     <i className="bi bi-trash-fill"></i>

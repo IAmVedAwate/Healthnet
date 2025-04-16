@@ -9,8 +9,10 @@ const UpdatePatient = () => {
     age: "",
     gender: "Male",
     contactInfo: "",
-    assignedDoctor: "",
+    doctorId: "",
     status: "Pending",
+    hospitalId: "d6224e00-b9fa-4cce-b3a8-6ae76df3c030"
+
   });
 const navigate = useNavigate();
   const handleChange = (e) => {
@@ -19,28 +21,28 @@ const navigate = useNavigate();
   };
 
   useEffect(() => {
-    const fetchEditable = ()=>{
+    const fetchEditable = () => {
       axios
-      .get(`http://localhost:5000/api/patients/${patientid}`,{
-        headers: {
-          'access-token': localStorage.getItem('token'),
-        },
-      })
-      .then((response) => {
-        setUpdatedData({
-          name: response.data.name,
-          age: response.data.age,
-          gender: response.data.gender,
-          contactInfo: response.data.contactInfo,
-          assignedDoctor: response.data.assignedDoctor,
-          status: response.data.status,
+        .get(`http://localhost:5000/api/patients/byId/${patientid}`, {
+          headers: {
+            "access-token": localStorage.getItem("token"),
+          },
         })
-      })
-      .catch((error) => console.error("Error fetching patient:", error));
-    }
+        .then((response) => {
+          setUpdatedData({
+            name: response.data.name,
+            age: response.data.age,
+            gender: response.data.gender,
+            contactInfo: response.data.contactInfo,
+            doctorId: response.data.doctorId,
+            status: response.data.status,
+            hospitalId: response.data.hospitalId
+          });
+        })
+        .catch((error) => console.error("Error fetching patient:", error));
+    };
     fetchEditable();
-    
-  }, [])
+  }, []);
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -117,8 +119,8 @@ const navigate = useNavigate();
           <label className="form-label">Assigned Doctor</label>
           <input
             type="text"
-            name="assignedDoctor"
-            defaultValue={updatedData.assignedDoctor}
+            name="doctorId"
+            defaultValue={updatedData.doctorId}
             className="form-control"
             onChange={handleChange}
             required

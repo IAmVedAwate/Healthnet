@@ -15,7 +15,7 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
 function createTables() {
   db.serialize(() => {
     // Enable foreign keys support
-    db.run(`PRAGMA foreign_keys = ON;`, (err) => {
+    db.run("PRAGMA foreign_keys = ON;", (err) => {
       if (err) console.error("Error enabling foreign keys:", err.message);
     });
 
@@ -45,21 +45,6 @@ function createTables() {
       );
     `, (err) => { if (err) console.error("Error creating Hospital table:", err.message); });
 
-    db.run(`
-      CREATE TABLE IF NOT EXISTS SignupRequest (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        location TEXT NOT NULL,
-        contact TEXT NOT NULL,
-        password TEXT NOT NULL,
-        status TEXT DEFAULT 'pending',
-        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `, (err) => {
-      if (err) console.error("Error creating SignupRequest table:", err.message);
-    });
-    
     // Patient table: Patient can signup
     db.run(`
       CREATE TABLE IF NOT EXISTS Patient (
@@ -73,6 +58,26 @@ function createTables() {
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `, (err) => { if (err) console.error("Error creating Patient table:", err.message); });
+    // PatientData table: Patient data
+    db.run(`
+      CREATE TABLE IF NOT EXISTS PatientData (
+        patientDataId TEXT PRIMARY KEY,
+        hospitalId TEXT NOT NULL,
+        name TEXT NOT NULL,
+        age INTEGER,
+        gender TEXT,
+        doctorId TEXT NOT NULL,
+        contactInfo TEXT,
+        status TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (doctorId) REFERENCES Doctor(doctorId),
+        FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId)
+      );
+  `, (err) => {
+  if (err) console.error("Error creating PatientData table:", err.message);
+});
+
 
     // IManager table: Inventory Manager, belongs to a Hospital
     db.run(`

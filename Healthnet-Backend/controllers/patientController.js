@@ -1,97 +1,134 @@
 // controllers/patientController.js
-const Patient = require('../models/Patient');
-const Bed = require('../models/Bed');
+const { promisify } = require('util');
+const { v4: uuidv4 } = require('uuid');
+const db = require('../dbSetup');
 
-const createPatient = async (req, res) => {
-  try {
-    
-    const newPatient = new Patient(req.body);
+const dbRun = promisify(db.run).bind(db);
+const dbGet = promisify(db.get).bind(db);
+const dbAll = promisify(db.all).bind(db);
 
-    await newPatient.save();
-    res.status(201).send(newPatient);
-  } catch (error) {
-    res.status(400).send({ error: error.message });
-  }
-};
-
+// POST /api/patients
 const addPatient = async (req, res) => {
   try {
-    const { bed } = req.body;
-    const bedUpdate = await Bed.findOneAndUpdate(
-          { _id: bed._id },
-          { ward: bed.ward, type: bed.type, status: bed.status, patient: req.params.id },
-          { new: true }
-        );
+    const {
+      hospitalId,
+      name,
+      age,
+      gender,
+      doctorId,
+      contactInfo,
+      status
+    } = req.body;
 
-    await bedUpdate.save();
-    res.status(201).send(bedUpdate);
+    const patientDataId = uuidv4();
+
+    const query = `
+      INSERT INTO PatientData 
+        (patientDataId, hospitalId, name, age, gender, doctorId, contactInfo, status, createdAt, updatedAt)
+      VALUES 
+        (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    `;
+
+    await dbRun(query, [
+      patientDataId,
+      hospitalId,
+      name,
+      age,
+      gender,
+      doctorId,
+      contactInfo,
+      status
+    ]);
+
+    const newPatient = await dbGet("SELECT * FROM PatientData WHERE patientDataId = ?", [patientDataId]);
+    res.status(201).json(newPatient);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
   }
 };
 
-const getPatientById = async (req, res) => {
-  try {
-    const patient = await Patient.findOne({ _id: req.params.id });
-    
-    if (!patient) {
-      return res.status(404).send({ message: 'Patient not found' });
-    }
-    
-    res.status(200).send(patient);
-  } catch (error) {
-    res.status(400).send({ error: error.message });
-  }
-};
-
-
+// GET /api/patients
 const getAllPatients = async (req, res) => {
   try {
-    const patients = await Patient.find({hospital: req.body.hospital});
-    res.status(200).send(patients);
+    const patients = await dbAll("SELECT * FROM PatientData");
+    res.status(200).json(patients);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
-
-const updatePatient = async (req, res) => {
+// GET /api/patients/:id
+const getPatientById = async (req, res) => {
   try {
-    const patient = await Patient.findOneAndUpdate(
-      { _id: req.params.id },
-      req.body,
-      { new: true }
-    );
+    const { id } = req.params;
+    const patient = await dbGet("SELECT * FROM PatientData WHERE patientDataId = ?", [id]);
 
     if (!patient) {
-      return res.status(404).send({ message: 'Patient not found' });
+      return res.status(404).json({ message: 'Patient not found' });
     }
 
-    res.status(200).send(patient);
+    res.status(200).json(patient);
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
-
+// DELETE /api/patients/:id
 const deletePatient = async (req, res) => {
   try {
-    const patient = await Patient.findOneAndDelete({ _id: req.params.id });
+    const { id } = req.params;
+    const result = await dbRun("DELETE FROM PatientData WHERE patientDataId = ?", [id]);
 
-    if (!patient) {
-      return res.status(404).send({ message: 'Patient not found' });
-    }
-
-    res.status(200).send({ message: 'Patient deleted' });
+    res.status(200).json({ message: 'Patient deleted successfully' });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
   }
 };
 
+// PUT /api/patients/:id
+const updatePatient = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      hospitalId,
+      name,
+      age,
+      gender,
+      doctorId,
+      contactInfo,
+      status
+    } = req.body;
 
+    const query = `
+      UPDATE PatientData 
+      SET hospitalId = ?, name = ?, age = ?, gender = ?, doctorId = ?, contactInfo = ?, status = ?, updatedAt = CURRENT_TIMESTAMP
+      WHERE patientDataId = ?
+    `;
+
+    await dbRun(query, [
+      hospitalId,
+      name,
+      age,
+      gender,
+      doctorId,
+      contactInfo,
+      status,
+      id
+    ]);
+
+    const updatedPatient = await dbGet("SELECT * FROM PatientData WHERE patientDataId = ?", [id]);
+    res.status(200).json(updatedPatient);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
-  createPatient,
   addPatient,
   getAllPatients,
   getPatientById,

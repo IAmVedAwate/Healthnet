@@ -4,18 +4,21 @@ import { useNavigate } from "react-router-dom";
 
 const DeletePatient = () => {
   const [patientID, setPatientID] = useState("");
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .delete(`http://localhost:5000/api/patients/${patientID}`,{
+      .delete(`http://localhost:5000/api/patients/${patientID}`, {
         headers: {
-          'access-token': localStorage.getItem('token'),
+          "access-token": localStorage.getItem("token"),
         },
       })
-      .then(() => alert("Patient deleted successfully"))
+      .then(() => {
+        alert("Patient deleted successfully");
+        navigate("/patient/get");
+      })
       .catch((error) => console.error("Error deleting patient:", error));
-    navigate("/patient/get");
   };
 
   return (
@@ -23,11 +26,7 @@ const navigate = useNavigate();
       <h2>Delete Patient</h2>
       <form onSubmit={handleSubmit}>
         <label className="form-label">Patient ID:</label>
-        <input className="form-control w-25"
-          type="text"
-          onChange={(e) => setPatientID(e.target.value)}
-          required
-        />
+        <input className="form-control w-25" type="text" onChange={(e) => setPatientID(e.target.value)} required />
         <button className="btn btn-danger my-2" type="submit">Delete</button>
       </form>
     </div>
