@@ -5,7 +5,7 @@ conn = sqlite3.connect('HealthNet.db')
 cursor = conn.cursor()
 
 try:
-    cursor.execute("DROP TABLE IF EXISTS DoctorSlot;")
+    cursor.execute("DROP TABLE IF EXISTS Hospital;")
     print("Doctor table dropped successfully.")
 except Exception as e:
     print("Error dropping Doctor table:", e)
