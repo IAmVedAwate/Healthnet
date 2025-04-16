@@ -1,71 +1,97 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Navigation() {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const [token, setToken] = useState(null);
+  const [role, setRole] = useState(null);
+
+  // Fetch token and role from localStorage on component mount
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedRole = localStorage.getItem('role');
+
+    if (storedToken) {
+      setToken(storedToken);
+    }
+
+    if (storedRole) {
+      setRole(storedRole);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    setToken(null); // Clear the token from state
+    setRole(null); // Clear the role from state
+    window.location.href = '/'; // Redirect after logout
+  };
 
   return (
-    <>
-      <nav className="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
-        <div className="container-fluid">
-          <a className="navbar-brand">Healthnet</a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target=".navbar-collapse"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-            <ul className="navbar-nav flex-grow-1 fw-bold">
-              {/* {role && ( */}
-                <li className="nav-item">
-                  <Link to={"/"} className="nav-link text-dark">Home</Link>
-                </li>
-              {/* )} */}
-              {/* {role === 'hospital' && ( */}
-                <>
-                  <li className="nav-item">
-                    <Link to={"/doctor/get"} className="nav-link text-dark">Doctors</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to={"/room/get"} className="nav-link text-dark">Hospital Management</Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to={"/patient/get"} className="nav-link text-dark">Patients</Link>
-                  </li>
-                </>
-              {/* )} */}
-            </ul>
-            <div>
-              {!token ? (
-                <>
-                  <Link to={"/signup"} className="btn btn-outline-primary ms-auto me-1">Register</Link>
-                  <Link to={"/login"} className="btn btn-outline-success ms-auto">Login</Link>
-                </>
-              ) : (
-                <button className="btn btn-outline-danger ms-auto" onClick={() => {
-                  localStorage.removeItem('token');
-                  localStorage.removeItem('role');
-                  window.location.href = '/';
-                }}>
-                  Logout
-                </button>
-              )}
-            </div>
+    <nav className="bg-white border-b shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
+          <div className="flex-shrink-0 text-blue-700 font-bold text-xl">
+            <Link to="/">Healthnet</Link>
+          </div>
+
+          {/* Links */}
+          <div className="hidden md:flex md:items-center md:space-x-6 text-sm font-medium">
+            <Link to="/" className="text-gray-700 hover:text-blue-600 transition">
+              Home
+            </Link>
+
+            {role === 'Hospital' && (
+              <>
+                <Link to="/doctor/get" className="text-gray-700 hover:text-blue-600 transition">
+                  Doctors
+                </Link>
+                <Link to="/room/get" className="text-gray-700 hover:text-blue-600 transition">
+                  Hospital Management
+                </Link>
+                <Link to="/patient/get" className="text-gray-700 hover:text-blue-600 transition">
+                  Patients
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-2">
+            {!token ? (
+              <>
+                <Link
+                  to="/signup"
+                  className="text-sm border border-blue-500 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 transition"
+                >
+                  Register
+                </Link>
+                <Link
+                  to="/login"
+                  className="text-sm border border-green-500 text-green-600 px-4 py-1.5 rounded hover:bg-green-50 transition"
+                >
+                  Login
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="text-sm border border-red-500 text-red-600 px-4 py-1.5 rounded hover:bg-red-50 transition"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 }
 
 export default Navigation;
+
+
 
 
 // import React from 'react';

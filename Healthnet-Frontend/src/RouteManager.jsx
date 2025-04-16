@@ -34,6 +34,9 @@ import ManageBeds from './components/hospital/ManageBeds';
 import ManageRooms from './components/hospital/ManageRooms';
 import ForgetPassword from './components/auth/ForgetPassword';
 import DoctorSlotManager from './components/doctor/DoctorSlotManager';
+import AdminDashboard from './components/admin/AdminDashboard';
+import HospitalSignup from './components/auth/HospitalSignup';
+import PatientSignup from './components/auth/PatientSignup';
 
 const RouteManager = () => {
   const token = localStorage.getItem('token');
@@ -47,7 +50,12 @@ const RouteManager = () => {
           <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
           <Route path="/hospital/get" element={<GetAllHospitals />} />
           <Route path="/hospital/getByid/:hospitalid" element={<GetHospitalById />} />
+      </>
+      {role === "Admin" && (
+        <>
+          <Route path='/admin' element={<AdminDashboard /> } />
         </>
+      )}
       {role === 'Hospital' && (
         <>
           <Route path="/doctor/get" element={<GetAllDoctors />} />
@@ -56,7 +64,8 @@ const RouteManager = () => {
           <Route path="/doctor/delete" element={<DeleteDoctor />} />
           <Route path="/doctor/getByid/:doctorid" element={<GetDoctorById />} />
           <Route path="/doctor/dashboard/:doctorid" element={<DoctorSlotManager />} />
-          
+          <Route path="/patient/get" element={<GetAllPatients />} />
+          <Route path="/patient/add" element={<AddPatient />} />
         </>
       )}
       {role === 'patient' && (
@@ -66,7 +75,9 @@ const RouteManager = () => {
         <Route path="*" element={<Navigate to="/login" replace />} />
       )}
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path='/signup' element={<Signup />} />
+      <Route path="/patient-signup" element={<PatientSignup />} />
+      <Route path="/hospital-signup" element={<HospitalSignup />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/forget-password" element={<ForgetPassword />} />
     </Routes>

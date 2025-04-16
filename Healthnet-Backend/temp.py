@@ -7,8 +7,10 @@ cursor = conn.cursor()
 try:
     cursor.execute("DROP TABLE IF EXISTS Hospital;")
     print("Doctor table dropped successfully.")
+    cursor.execute("DROP TABLE IF EXISTS SignupRequest;")
+    print("SignupRequest table dropped successfully.")
 except Exception as e:
-    print("Error dropping Doctor table:", e)
+    print("SignupRequest dropping Doctor table:", e)
 
 conn.commit()
 conn.close()

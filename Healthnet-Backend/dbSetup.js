@@ -45,6 +45,21 @@ function createTables() {
       );
     `, (err) => { if (err) console.error("Error creating Hospital table:", err.message); });
 
+    db.run(`
+      CREATE TABLE IF NOT EXISTS SignupRequest (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        location TEXT NOT NULL,
+        contact TEXT NOT NULL,
+        password TEXT NOT NULL,
+        status TEXT DEFAULT 'pending',
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `, (err) => {
+      if (err) console.error("Error creating SignupRequest table:", err.message);
+    });
+    
     // Patient table: Patient can signup
     db.run(`
       CREATE TABLE IF NOT EXISTS Patient (

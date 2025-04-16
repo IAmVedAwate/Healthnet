@@ -13,6 +13,7 @@ const db = require('../dbSetup');
 const { promisify } = require('util');
 const dbGet = promisify(db.get).bind(db);
 const dbRun = promisify(db.run).bind(db);
+const dbAll = promisify(db.all).bind(db);
 
 // Extra API Functions for Reset Password and Forget Password
 
@@ -194,61 +195,151 @@ router.post('/patient/signup', async (req, res) => {
 });
 
 // routes/auth.js (or wherever your hospital signup endpoint is defined)
-router.post('/hospital/signup', async (req, res) => {
-    try {
-      const { name, email, password, confirmPassword, address, phoneNumber } = req.body;
-      if (password !== confirmPassword) {
-        return res.status(400).json({ msg: "Passwords do not match" });
-      }
+// router.post('/hospital/signup',
+//   async (req, res) => {
+//     try {
+//       const { name, email, password, confirmPassword, address, phoneNumber } = req.body;
+//       if (password !== confirmPassword) {
+//         return res.status(400).json({ msg: "Passwords do not match" });
+//       }
   
-      // Check email uniqueness across Hospital and Patient tables
-      const hospitalExists = await dbGet("SELECT * FROM Hospital WHERE email = ?", [email]);
-      const patientExists = await dbGet("SELECT * FROM Patient WHERE email = ?", [email]);
-      if (hospitalExists || patientExists) {
-        return res.status(400).json({ msg: "Email already exists" });
-      }
+//       // Check email uniqueness across Hospital and Patient tables
+//       const hospitalExists = await dbGet("SELECT * FROM Hospital WHERE email = ?", [email]);
+//       const patientExists = await dbGet("SELECT * FROM Patient WHERE email = ?", [email]);
+//       if (hospitalExists || patientExists) {
+//         return res.status(400).json({ msg: "Email already exists" });
+//       }
   
-      const salt = bcrypt.genSaltSync(10);
-      const hash = bcrypt.hashSync(password, salt);
-      const hospitalId = uuidv4();
+//       const salt = bcrypt.genSaltSync(10);
+//       const hash = bcrypt.hashSync(password, salt);
+//       const hospitalId = uuidv4();
   
-      // Insert new hospital record
-      await dbRun(
-        `INSERT INTO Hospital (hospitalId, name, email, password, address, phoneNumber, createdAt, updatedAt)
-         VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-        [hospitalId, name, email, hash, address, phoneNumber]
-      );
+//       // Insert new hospital record
+//       await dbRun(
+//         `INSERT INTO Hospital (hospitalId, name, email, password, address, phoneNumber, createdAt, updatedAt)
+//          VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+//         [hospitalId, name, email, hash, address, phoneNumber]
+//       );
   
-      // Insert default departments for this hospital
-      const defaultDepartments = ["Emergency", "Cardiology", "Neurology", "Orthopedics", "Hematology", "Pediatric"];
-      for (const deptName of defaultDepartments) {
-        const deptId = uuidv4();
-        await dbRun(
-          `INSERT INTO Department (departmentId, hospitalId, name, description, createdAt, updatedAt)
-           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-          [deptId, hospitalId, deptName, deptName]
-        );
-      }
+//       // Insert default departments for this hospital
+//       const defaultDepartments = ["Emergency", "Cardiology", "Neurology", "Orthopedics", "Hematology", "Pediatric"];
+//       for (const deptName of defaultDepartments) {
+//         const deptId = uuidv4();
+//         await dbRun(
+//           `INSERT INTO Department (departmentId, hospitalId, name, description, createdAt, updatedAt)
+//            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+//           [deptId, hospitalId, deptName, deptName]
+//         );
+//       }
   
-      // Create JWT payload and sign token
-      const payload = { id: hospitalId, email, role: "Hospital" };
-      jwt.sign(payload, process.env.TOKEN, { expiresIn: '1h' }, (err, token) => {
-        if (err) throw err;
-        res.setHeader('access-token', token);
-        res.json({
-          token,
-          role: "Hospital",
-          success: true,
-          id: id,
-          msg: "Hospital signup successful! Default departments created."
-        });
-      });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+//       // Create JWT payload and sign token
+//       const payload = { id: hospitalId, email, role: "Hospital" };
+//       jwt.sign(payload, process.env.TOKEN, { expiresIn: '1h' }, (err, token) => {
+//         if (err) throw err;
+//         res.setHeader('access-token', token);
+//         res.json({
+//           token,
+//           role: "Hospital",
+//           success: true,
+//           id: id,
+//           msg: "Hospital signup successful! Default departments created."
+//         });
+//       });
+//     } catch (err) {
+//       console.error(err.message);
+//       res.status(500).send('Server error');
+//     }
+//   }
+// );
+  
+router.post("/hospital/signup", async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword, location, contact } = req.body;
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: "Passwords do not match" });
     }
-  });
-  
+
+    const existingHospital = await dbGet("SELECT * FROM Hospital WHERE email = ?", [email]);
+    const existingSignup = await dbGet("SELECT * FROM SignupRequest WHERE email = ?", [email]);
+
+    if (existingHospital || existingSignup) {
+      return res.status(400).json({ msg: "Email already exists or is under review" });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    await dbRun(
+      `INSERT INTO SignupRequest (name, email, password, location, contact, status, createdAt)
+       VALUES (?, ?, ?, ?, ?, 'pending', CURRENT_TIMESTAMP)`,
+      [name, email, hashedPassword, location, contact]
+    );
+
+    res.status(200).json({ msg: "Signup request submitted. Awaiting admin approval." });
+  } catch (err) {
+    console.error("Signup request failed:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
+router.get("/admin/signup-requests", async (req, res) => {
+  try {
+    const requests = await dbAll("SELECT * FROM SignupRequest WHERE status = 'pending'");
+    res.status(200).json(requests);
+  } catch (err) {
+    console.error("Error fetching signup requests:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
+router.post("/admin/approve/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const request = await dbGet("SELECT * FROM SignupRequest WHERE id = ?", [id]);
+
+    if (!request) {
+      return res.status(404).json({ msg: "Signup request not found" });
+    }
+
+    const { name, email, password, location, contact } = request;
+    const hospitalId = `H${Date.now().toString().slice(-6)}`; // You can replace with UUID or custom ID logic
+
+    await dbRun(
+      `INSERT INTO Hospital (hospitalId, name, email, password, address, phoneNumber, createdAt, updatedAt)
+       VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+      [hospitalId, name, email, password, location, contact]
+    );
+
+    await dbRun(`DELETE FROM SignupRequest WHERE id = ?`, [id]);
+
+    res.status(200).json({ msg: "Hospital approved and added successfully." });
+  } catch (err) {
+    console.error("Approval failed:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+router.delete("/admin/reject/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await dbRun(`DELETE FROM SignupRequest WHERE id = ?`, [id]);
+
+    if (result.changes === 0) {
+      return res.status(404).json({ msg: "Signup request not found" });
+    }
+
+    res.status(200).json({ msg: "Signup request rejected and removed." });
+  } catch (err) {
+    console.error("Rejection failed:", err.message);
+    res.status(500).send("Server error");
+  }
+});
+
 /**
  * Shared Login for Patient and Hospital
  * Endpoint: POST /api/auth/login

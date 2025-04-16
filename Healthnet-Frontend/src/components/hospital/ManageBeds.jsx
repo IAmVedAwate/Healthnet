@@ -49,6 +49,7 @@ const ManageBeds = () => {
   useEffect(() => {
     if (roomId) fetchBeds();
   }, [roomId]);
+  console.log(beds)
 
   // When the user types in the patient name input, filter the allPatients list.
   const handlePatientNameChange = (bedId, value) => {
