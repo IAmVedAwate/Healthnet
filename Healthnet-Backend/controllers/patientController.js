@@ -48,6 +48,16 @@ const addPatient = async (req, res) => {
   }
 };
 
+const getAllPatientsForBill = async (req, res) => {
+  try {
+    const patients = await dbAll("SELECT * FROM Patient;");
+    res.status(200).json(patients);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 // GET /api/patients
 const getAllPatients = async (req, res) => {
   try {
@@ -134,4 +144,5 @@ module.exports = {
   getPatientById,
   deletePatient,
   updatePatient,
+  getAllPatientsForBill
 };
