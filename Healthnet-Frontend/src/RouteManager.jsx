@@ -38,10 +38,10 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import HospitalSignup from './components/auth/HospitalSignup';
 import PatientSignup from './components/auth/PatientSignup';
 import DeletePatient from './components/patient/DeletePatient';
+import { useSelector } from 'react-redux';
 
 const RouteManager = () => {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
+  const { token, role } = useSelector((state) => state.auth);
 
   return (
     <Routes>

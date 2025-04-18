@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AddPatient = () => {
   const [patient, setPatient] = useState({
@@ -12,6 +13,7 @@ const AddPatient = () => {
     status: "Pending",
     hospitalId: "d6224e00-b9fa-4cce-b3a8-6ae76df3c030"
   });
+  const {token} = useSelector((state) => state.auth)
 
   const navigate = useNavigate();
 
@@ -25,7 +27,7 @@ const AddPatient = () => {
     axios
       .post("http://localhost:5000/api/patients/add", patient, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then(() => {

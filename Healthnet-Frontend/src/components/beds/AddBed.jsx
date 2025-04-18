@@ -33,7 +33,7 @@
 //     axios
 //       .post("http://localhost:5000/api/beds/add", bedData,{
 //         headers: {
-//           'access-token': localStorage.getItem('token'),
+//           'access-token': token,
 //         },
 //       })
 //       .then(() => alert("Bed added successfully"))
@@ -122,9 +122,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AddBed = () => {
   const navigate = useNavigate();
+  const {token} = useSelector((state) => state.auth)
 
   const wardOptions = ["A", "B", "C"];
   const typeOptions = ["ICU", "General", "Personal"];
@@ -145,7 +147,7 @@ const AddBed = () => {
       try {
         await axios.post("http://localhost:5000/api/beds/add", values, {
           headers: {
-            "access-token": localStorage.getItem("token"),
+            "access-token": token,
           },
         });
         alert("Bed added successfully");

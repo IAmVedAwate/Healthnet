@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CheckCircle, XCircle, Building2 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { useSelector } from "react-redux";
 
 const AdminDashboard = () => {
   const [tab, setTab] = useState("hospitals");
   const [hospitals, setHospitals] = useState([]);
   const [requests, setRequests] = useState([]);
+  const {token} = useSelector((state) => state.auth);
 
   const fetchHospitals = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/hospitals", {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       });
         
@@ -28,7 +30,7 @@ const AdminDashboard = () => {
     try {
       const res = await axios.get("http://localhost:5000/api/auth/admin/signup-requests", {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       });
         setRequests(res.data);
@@ -42,7 +44,7 @@ const AdminDashboard = () => {
     try {
       await axios.post(`http://localhost:5000/api/auth/admin/approve/${requestId}`, {}, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       });
       fetchSignupRequests();
@@ -56,7 +58,7 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`http://localhost:5000/api/admin/reject/${requestId}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       });
       fetchSignupRequests();

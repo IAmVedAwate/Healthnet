@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UpdateHospital = () => {
+  const { token } = useSelector((state) => state.auth)
   const { hospitalid } = useParams();
   const [formData, setFormData] = useState({
     hospitalName: "",
@@ -19,7 +21,7 @@ const UpdateHospital = () => {
       axios
       .get(`http://localhost:5000/api/hospitals/${hospitalid}`,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => {
@@ -40,7 +42,7 @@ const UpdateHospital = () => {
     axios
       .put(`http://localhost:5000/api/hospitals/${hospitalid}`, formData,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => alert("Hospital updated successfully"))

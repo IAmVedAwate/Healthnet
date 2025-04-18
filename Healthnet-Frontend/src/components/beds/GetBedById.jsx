@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const GetBedById = () => {
   const [bedID, setBedID] = useState("");
   const [bed, setBed] = useState(null);
+  const { token } = useSelector((state) => state.auth);
+  
 
   const fetchBed = () => {
     axios
       .get(`http://localhost:5000/api/beds/${bedID}`,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => setBed(response.data))

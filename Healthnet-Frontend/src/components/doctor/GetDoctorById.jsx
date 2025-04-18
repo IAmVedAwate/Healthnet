@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GetDoctorById = () => {
   const [doctorID, setDoctorID] = useState("");
   const [doctor, setDoctor] = useState(null);
   const navigate = useNavigate();
+  const {token} = useSelector((state) => state.auth)
 
   const handleSearch = () => {
     axios
       .get(`http://localhost:5000/api/doctors/${doctorID}`, {
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => setDoctor(response.data))

@@ -80,7 +80,7 @@ const getPatientById = async (req, res) => {
 const deletePatient = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await dbRun("DELETE FROM PatientData WHERE patientDataId = ?", [id]);
+    const result = await dbRun("DELETE FROM Patient WHERE patientId = ?", [id]);
 
     res.status(200).json({ message: 'Patient deleted successfully' });
   } catch (error) {

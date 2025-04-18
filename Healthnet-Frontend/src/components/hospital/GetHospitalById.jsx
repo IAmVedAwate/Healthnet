@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const GetHospitalById = () => {
   const [hospitalID, setHospitalID] = useState("");
   const [hospital, setHospital] = useState(null);
-
+  const {token} = useSelector((state) => state.auth)
+ 
   const handleSearch = () => {
     axios
       .get(`http://localhost:5000/api/hospitals/${hospitalID}`,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => setHospital(response.data))

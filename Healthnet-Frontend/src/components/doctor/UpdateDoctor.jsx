@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UpdateDoctor = () => {
   const { doctorid } = useParams();
   const navigate = useNavigate();
-  const [hospitalId, setHospitalId] = useState(localStorage.getItem("hospitalId"));
+  const {id , token} = useSelector((state) => state.auth)
+  const [hospitalId, setHospitalId] = useState(id);
   const [departments, setDepartments] = useState([]);
   
   const [formData, setFormData] = useState({
@@ -27,7 +29,7 @@ const UpdateDoctor = () => {
     if (hospitalId) {
       axios
         .get(`http://localhost:5000/api/hospitals/hospital/${hospitalId}`, {
-          headers: { "access-token": localStorage.getItem("token") },
+          headers: { "access-token": token },
         })
         .then((response) => setDepartments(response.data))
         .catch((error) => console.error("Error fetching departments:", error));
@@ -39,7 +41,7 @@ const UpdateDoctor = () => {
     const fetchDoctor = async () => {
       try {
         const res = await axios.get(`http://localhost:5000/api/doctors/${doctorid}`, {
-          headers: { "access-token": localStorage.getItem("token") },
+          headers: { "access-token": token },
         });
         setFormData({
           departmentId: res.data.departmentId || "",
@@ -70,7 +72,7 @@ const UpdateDoctor = () => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:5000/api/doctors/${doctorid}`, formData, {
-        headers: { "access-token": localStorage.getItem("token") },
+        headers: { "access-token": token },
       });
       alert("Doctor updated successfully");
       navigate("/doctor/get");
