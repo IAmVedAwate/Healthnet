@@ -82,15 +82,17 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GetAllPatients = () => {
   const [patients, setPatients] = useState([]);
+  const { token , id} = useSelector((state) => state.auth)
 
   const fetchPatients = useCallback(() => {
     axios
       .get("http://localhost:5000/api/patients/all", {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then((response) => setPatients(response.data))
@@ -102,7 +104,7 @@ const GetAllPatients = () => {
     axios
       .delete(`http://localhost:5000/api/patients/${patientID}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then(() => {

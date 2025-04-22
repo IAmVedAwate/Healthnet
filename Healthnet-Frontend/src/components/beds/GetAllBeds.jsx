@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GetAllBeds = () => {
   const [beds, setBeds] = useState([]);
+  const {token } = useSelector((state) =>state.auth)
   const handleDelete = (bedID) => {
     axios
       .delete(`http://localhost:5000/api/beds/${bedID}`,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then(() => alert("Bed deleted successfully"))
@@ -18,7 +20,7 @@ const GetAllBeds = () => {
     axios
       .get("http://localhost:5000/api/beds",{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then((response) => setBeds(response.data))

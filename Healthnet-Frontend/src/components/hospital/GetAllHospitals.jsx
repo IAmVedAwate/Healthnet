@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GetAllHospitals = () => {
   const navigate = useNavigate();
   const [hospitals, setHospitals] = useState([]);
+  const {token} = useSelector((state) => state.auth)
 
   // Navigate to the appointment booking page with the hospitalId.
   const handleNavigation = (hospitalId) => {
@@ -15,7 +17,7 @@ const GetAllHospitals = () => {
     const fetchHospitals = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/hospitals", {
-          headers: { "access-token": localStorage.getItem("token") },
+          headers: { "access-token": token },
         });
         setHospitals(response.data);
       } catch (error) {

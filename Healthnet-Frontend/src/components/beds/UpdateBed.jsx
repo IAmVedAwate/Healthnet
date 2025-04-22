@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UpdateBed = () => {
   const { bedid } = useParams();
+  const { token } = useSelector((state) => state.auth);
   const [bedData, setBedData] = useState({ ward: "", type: "", status: "" });
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -47,7 +49,7 @@ const UpdateBed = () => {
     axios
       .put(`http://localhost:5000/api/beds/${bedid}`, bedData,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then(() => alert("Bed updated successfully"))

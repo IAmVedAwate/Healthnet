@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ManageRooms = () => {
   // State for form fields
+  const {token , id ,role} = useSelector((state) => state.auth)
   const [formData, setFormData] = useState({
     roomName: '',
     roomType: 'ICU', // default option: ICU
     description: '',
     bedCount: 0,
-    hospitalId: `${localStorage.getItem('hospitalId')}`, // For now, you can preset hospitalId or retrieve it from authenticated context/localStorage
+    hospitalId: id, // For now, you can preset hospitalId or retrieve it from authenticated context/localStorage
   });
   const navigate = useNavigate();
   

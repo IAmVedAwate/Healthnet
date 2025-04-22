@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from './store/authSlice';
+import { toast } from "react-toastify";
+
 
 function Navigation() {
-  const [token, setToken] = useState(null);
-  const [role, setRole] = useState(null);
-
-  // Fetch token and role from localStorage on component mount
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedRole = localStorage.getItem('role');
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-
-    if (storedRole) {
-      setRole(storedRole);
-    }
-  }, []);
+  // const [token, setToken] = useState(null);
+  // const [role, setRole] = useState(null);
+  const { token, role } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    setToken(null); // Clear the token from state
-    setRole(null); // Clear the role from state
-    window.location.href = '/'; // Redirect after logout
+    
+    dispatch(logout());
+    toast.error("Logged out!");
+    navigate('/')
   };
 
   return (

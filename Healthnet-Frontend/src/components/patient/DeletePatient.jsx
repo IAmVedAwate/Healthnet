@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const DeletePatient = () => {
   const [patientID, setPatientID] = useState("");
   const navigate = useNavigate();
+  const {token} = useSelector((state) => state.auth)
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .delete(`http://localhost:5000/api/patients/${patientID}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then(() => {

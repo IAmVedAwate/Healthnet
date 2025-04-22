@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UpdatePatient = () => {
+  const { token } = useSelector((state) => state.auth)
   const {patientid} = useParams();
   const [updatedData, setUpdatedData] = useState({
     name: "",
@@ -25,7 +27,7 @@ const navigate = useNavigate();
       axios
         .get(`http://localhost:5000/api/patients/byId/${patientid}`, {
           headers: {
-            "access-token": localStorage.getItem("token"),
+            "access-token": token,
           },
         })
         .then((response) => {
@@ -49,7 +51,7 @@ const navigate = useNavigate();
     axios
       .put(`http://localhost:5000/api/patients/${patientid}`, updatedData,{
         headers: {
-          'access-token': localStorage.getItem('token'),
+          'access-token': token,
         },
       })
       .then(() => alert("Patient updated successfully"))

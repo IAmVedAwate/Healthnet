@@ -12,7 +12,7 @@
 //     if (hospitalId) {
 //       axios
 //         .get(`http://localhost:5000/api/hospitals/hospital/${hospitalId}`, {
-//           headers: { "access-token": localStorage.getItem("token") },
+//           headers: { "access-token": token },
 //         })
 //         .then((response) => setDepartments(response.data))
 //         .catch((error) => console.error("Error fetching departments:", error));
@@ -50,7 +50,7 @@
 //     try {
 //       // Adjust endpoint as needed; here we're assuming POST /api/doctors/add
 //       await axios.post("http://localhost:5000/api/doctors/add", formData, {
-//         headers: { "access-token": localStorage.getItem("token") },
+//         headers: { "access-token": token },
 //       });
 //       alert("Doctor added successfully");
 //       navigate("/doctor/get");
@@ -202,18 +202,20 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AddDoctor = () => {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
-  const hospitalId = localStorage.getItem("hospitalId");
+  const {token , id } = useSelector((state) => state.auth)
+  const hospitalId = id;
 
   // Fetch departments
   useEffect(() => {
     if (hospitalId) {
       axios
         .get(`http://localhost:5000/api/hospitals/hospital/${hospitalId}`, {
-          headers: { "access-token": localStorage.getItem("token") },
+          headers: { "access-token": token },
         })
         .then((res) => setDepartments(res.data))
         .catch((err) => console.error("Error fetching departments:", err));
@@ -252,7 +254,7 @@ const AddDoctor = () => {
         await axios.post(
           "http://localhost:5000/api/doctors/add",
           { ...values, hospitalId },
-          { headers: { "access-token": localStorage.getItem("token") } }
+          { headers: { "access-token": token } }
         );
         alert("Doctor added successfully");
         navigate("/doctor/get");

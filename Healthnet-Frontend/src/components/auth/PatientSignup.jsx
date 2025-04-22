@@ -198,9 +198,13 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { loginSuccess } from '../../store/authSlice';
 
 const PatientSignup = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -235,14 +239,25 @@ const PatientSignup = () => {
           password: values.password,
           confirmPassword: values.confirmPassword,
         });
+        const data = await res.data;
 
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('role', res.data.role);
-        localStorage.setItem('patientId', res.data.id);
+        console.log(data);
+        if (res.status === 200) {
+          toast.success(data.msg);
+        dispatch(loginSuccess(
+          {
+            role: data.role,
+            token: data.token,
+            id: data.id
+          }
+        ))
+        
         setStatus({ success: res.data.msg });
         navigate('/');
+      }
       } catch (error) {
         setStatus({ error: error.response?.data?.msg || 'Signup failed' });
+        console.log(error)
       } finally {
         setSubmitting(false);
       }
@@ -368,7 +383,7 @@ const PatientSignup = () => {
               className="mt-1 cursor-pointer"
               {...formik.getFieldProps('terms')}
             />
-            <label htmlFor="terms" className="text-sm cursor-pointer">
+            <label htmlFor="terms" className="text-sm cursor-pointer ml-2">
               I agree to the Terms and Conditions
             </label>
           </div>

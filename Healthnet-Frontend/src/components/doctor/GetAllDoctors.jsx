@@ -11,7 +11,7 @@
 //     axios
 //       .get(`http://localhost:5000/api/doctors/all/${hospitalId}`, {
 //         headers: {
-//           "access-token": localStorage.getItem("token"),
+//           "access-token": token,
 //         },
 //       })
 //       .then((response) => setDoctors(response.data))
@@ -22,7 +22,7 @@
 //     axios
 //       .delete(`http://localhost:5000/api/doctors/${doctorId}`, {
 //         headers: {
-//           "access-token": localStorage.getItem("token"),
+//           "access-token": token,
 //         },
 //       })
 //       .then(() => {
@@ -113,17 +113,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GetAllDoctors = () => {
   const [doctors, setDoctors] = useState([]);
   const navigate = useNavigate();
+  const {token ,id} = useSelector((state) => state.auth)
 
   const fetchDoctors = () => {
-    const hospitalId = localStorage.getItem("hospitalId");
+    const hospitalId = id;
     axios
       .get(`http://localhost:5000/api/doctors/all/${hospitalId}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then((response) => setDoctors(response.data))
@@ -134,7 +136,7 @@ const GetAllDoctors = () => {
     axios
       .delete(`http://localhost:5000/api/doctors/${doctorId}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then(() => {

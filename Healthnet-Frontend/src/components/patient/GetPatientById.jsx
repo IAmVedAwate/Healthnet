@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const GetPatientById = () => {
   const [patientID, setPatientID] = useState("");
   const [patient, setPatient] = useState(null);
+  const {token} = useSelector((state) =>state.auth )
 
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
       .get(`http://localhost:5000/api/patients/${patientID}`, {
         headers: {
-          "access-token": localStorage.getItem("token"),
+          "access-token": token,
         },
       })
       .then((response) => setPatient(response.data))
