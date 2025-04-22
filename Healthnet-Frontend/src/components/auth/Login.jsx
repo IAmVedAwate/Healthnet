@@ -170,8 +170,9 @@ const Login = () => {
         } else {
           localStorage.setItem('hospitalId', res.data.id);
         }
-
-        navigate('/'); // Redirect after successful login
+        console.log(res)
+        if (localStorage.getItem("role") === "Admin") navigate('/admin')
+        else navigate('/'); // Redirect after successful login
       } catch (err) {
         setMessage(err.response?.data?.msg || 'Something went wrong');
       } finally {
