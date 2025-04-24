@@ -160,7 +160,7 @@ const AddBed = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 px-6">
-      <div className="bg-green-200 text-green-900 rounded-t-lg p-4">
+      <div className="bg-green-200 text-green-900 rounded-t-lg p-4 blur">
         <h1 className="text-2xl font-bold">Create Bed</h1>
       </div>
       <div className="bg-white shadow-lg rounded-b-lg p-6">

@@ -65,4 +65,16 @@ const getDepartmentsByHospital = async (req, res) => {
   }
 };
 
-module.exports = { getAllHospitals, getHospitalById, getDepartmentsByHospital };
+const getAllDepartment = async (req, res) => {
+  try {
+    const dept = await dbAll("SELECT DISTINCT * FROM Department")
+    console.log(dept);
+    res.status(200).json(dept)
+  } catch (error) {
+    res.status(500).json({message:"error pata nhi ", error: error.message})
+    
+  }
+}
+
+
+module.exports = { getAllHospitals, getHospitalById, getDepartmentsByHospital,getAllDepartment };

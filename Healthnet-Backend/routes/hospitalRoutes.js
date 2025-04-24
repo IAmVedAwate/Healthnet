@@ -4,6 +4,7 @@ const {
   getAllHospitals, 
   getHospitalById,
   getDepartmentsByHospital, 
+  getAllDepartment
 } = require('../controllers/hospitalController');
 
 const router = express.Router();
@@ -15,5 +16,6 @@ const router = express.Router();
 router.get('/', getAllHospitals); // Fetch all hospitals
 router.get('/:id', getHospitalById); // Fetch a specific hospital by ID
 router.get('/hospital/:hospitalId', getDepartmentsByHospital);
+router.get("/dept/", getAllDepartment);
 
 module.exports = router;
