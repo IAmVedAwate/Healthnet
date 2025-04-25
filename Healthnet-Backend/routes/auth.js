@@ -313,6 +313,16 @@ router.post("/admin/approve/:id", async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
       [hospitalId, name, email, password, location, contact]
     );
+    
+      const defaultDepartments = ["Emergency", "Cardiology", "Neurology", "Orthopedics", "Hematology", "Pediatric"];
+      for (const deptName of defaultDepartments) {
+        const deptId = uuidv4();
+        await dbRun(
+          `INSERT INTO Department (departmentId, hospitalId, name, description, createdAt, updatedAt)
+           VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+          [deptId, hospitalId, deptName, deptName]
+        );
+      }
 
     await dbRun(`DELETE FROM SignupRequest WHERE id = ?`, [id]);
 
