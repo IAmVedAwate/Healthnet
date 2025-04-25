@@ -1,0 +1,74 @@
+{
+    "CityCare": [
+        {
+            "name": "Dr. Joshi",
+            "specialization": "Cardiology",
+            "appointments": [
+                [
+                    "2025-04-15",
+                    "15:00"
+                ],
+                [
+                    "2025-05-15",
+                    "14:00"
+                ]
+            ]
+        },
+        {
+            "name": "Dr. Mehta",
+            "specialization": "Cardiology",
+            "appointments": [
+                [
+                    "2025-04-15",
+                    "15:00"
+                ]
+            ]
+        }
+    ],
+    "HealthPlus": [
+        {
+            "name": "Dr. Rao",
+            "specialization": "Cardiology",
+            "appointments": [
+                [
+                    "2025-04-15",
+                    "15:00"
+                ],
+                [
+                    "2025-05-15",
+                    "14:00"
+                ]
+            ]
+        },
+        {
+            "name": "Dr. Patil",
+            "specialization": "Orthology",
+            "appointments": [
+                [
+                    "2025-04-15",
+                    "15:00"
+                ],
+                [
+                    "2025-05-15",
+                    "14:00"
+                ]
+            ]
+        }
+    ],
+    "CareMax": [
+        {
+            "name": "Dr. Varma",
+            "specialization": "Cardiology",
+            "appointments": [
+                [
+                    "2025-04-15",
+                    "15:00"
+                ],
+                [
+                    "2025-05-15",
+                    "14:00"
+                ]
+            ]
+        }
+    ]
+}

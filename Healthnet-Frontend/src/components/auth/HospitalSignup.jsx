@@ -2,6 +2,7 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const HospitalSignup = () => {
   const formik = useFormik({
@@ -28,6 +29,7 @@ const HospitalSignup = () => {
     onSubmit: async (values, { setSubmitting, resetForm, setStatus }) => {
       try {
         const res = await axios.post("http://localhost:5000/api/auth/hospital/signup", values);
+        toast.success(res.data.msg)
         setStatus({ success: res.data.msg });
         resetForm();
       } catch (err) {

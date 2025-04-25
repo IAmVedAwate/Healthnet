@@ -69,8 +69,9 @@ const RouteManager = () => {
           <Route path="/patient/add" element={<AddPatient />} />
         </>
       )}
-      {/* {role === 'patient' && ( */}
+      {role === 'Patient' && ( 
         <>
+          <Route path='/patients' element={<Home />}/>
         <Route path="/patient/get" element={<GetAllPatients />} />
         <Route path="/patient/add" element={<AddPatient />} />
         <Route path="/patient/remove/:id" element={<DeletePatient />} />
@@ -78,7 +79,7 @@ const RouteManager = () => {
         <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
         </>
 
-      {/* )} */}
+    )}
       {!role && (
         <Route path="*" element={<Navigate to="/login" replace />} />
       )}

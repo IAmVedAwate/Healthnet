@@ -1,0 +1,273 @@
+[
+    {
+      "caseId": "case_001",
+      "patientId": "patient_001",
+      "cause": "Severe chest pain and shortness of breath.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T08:15:00",
+      "hospitalId": "hospital_A",
+      "department": "Emergency"
+    },
+    {
+      "caseId": "case_002",
+      "patientId": "patient_002",
+      "cause": "Mild headache with nausea.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T08:20:00",
+      "hospitalId": "hospital_B",
+      "department": "General Medicine"
+    },
+    {
+      "caseId": "case_003",
+      "patientId": "patient_003",
+      "cause": "Acute abdominal pain suggesting appendicitis.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T08:25:00",
+      "hospitalId": "hospital_A",
+      "department": "Surgery"
+    },
+    {
+      "caseId": "case_004",
+      "patientId": "patient_004",
+      "cause": "Chronic lower back pain worsening over weeks.",
+      "urgency": 4,
+      "arrivalTime": "2025-04-16T08:30:00",
+      "hospitalId": "hospital_C",
+      "department": "Orthopedics"
+    },
+    {
+      "caseId": "case_005",
+      "patientId": "patient_005",
+      "cause": "High fever and persistent cough.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T08:35:00",
+      "hospitalId": "hospital_B",
+      "department": "Pulmonology"
+    },
+    {
+      "caseId": "case_006",
+      "patientId": "patient_006",
+      "cause": "Sudden loss of vision in one eye.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T08:40:00",
+      "hospitalId": "hospital_C",
+      "department": "Ophthalmology"
+    },
+    {
+      "caseId": "case_007",
+      "patientId": "patient_007",
+      "cause": "Severe allergic reaction with swelling of face.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T08:45:00",
+      "hospitalId": "hospital_A",
+      "department": "Emergency"
+    },
+    {
+      "caseId": "case_008",
+      "patientId": "patient_008",
+      "cause": "Persistent dizziness and fatigue.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T08:50:00",
+      "hospitalId": "hospital_B",
+      "department": "General Medicine"
+    },
+    {
+      "caseId": "case_009",
+      "patientId": "patient_009",
+      "cause": "Acute knee injury during sports.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T08:55:00",
+      "hospitalId": "hospital_C",
+      "department": "Orthopedics"
+    },
+    {
+      "caseId": "case_010",
+      "patientId": "patient_010",
+      "cause": "Symptoms of severe anxiety and panic attacks.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T09:00:00",
+      "hospitalId": "hospital_A",
+      "department": "Psychiatry"
+    },
+    {
+      "caseId": "case_011",
+      "patientId": "patient_011",
+      "cause": "High blood pressure with severe headache.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:05:00",
+      "hospitalId": "hospital_B",
+      "department": "Cardiology"
+    },
+    {
+      "caseId": "case_012",
+      "patientId": "patient_012",
+      "cause": "Worsening asthma with difficulty breathing.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T09:10:00",
+      "hospitalId": "hospital_C",
+      "department": "Pulmonology"
+    },
+    {
+      "caseId": "case_013",
+      "patientId": "patient_013",
+      "cause": "Persistent stomach ache and vomiting.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:15:00",
+      "hospitalId": "hospital_A",
+      "department": "Gastroenterology"
+    },
+    {
+      "caseId": "case_014",
+      "patientId": "patient_014",
+      "cause": "Severe migraine with visual disturbances.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T09:20:00",
+      "hospitalId": "hospital_B",
+      "department": "Neurology"
+    },
+    {
+      "caseId": "case_015",
+      "patientId": "patient_015",
+      "cause": "Minor fracture of the wrist.",
+      "urgency": 4,
+      "arrivalTime": "2025-04-16T09:25:00",
+      "hospitalId": "hospital_C",
+      "department": "Orthopedics"
+    },
+    {
+      "caseId": "case_016",
+      "patientId": "patient_016",
+      "cause": "Burn injury on hand requiring urgent care.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:30:00",
+      "hospitalId": "hospital_A",
+      "department": "Surgery"
+    },
+    {
+      "caseId": "case_017",
+      "patientId": "patient_017",
+      "cause": "Signs of stroke with facial drooping.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T09:35:00",
+      "hospitalId": "hospital_B",
+      "department": "Emergency"
+    },
+    {
+      "caseId": "case_018",
+      "patientId": "patient_018",
+      "cause": "Infection with high fever and rash.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:40:00",
+      "hospitalId": "hospital_C",
+      "department": "Infectious Diseases"
+    },
+    {
+      "caseId": "case_019",
+      "patientId": "patient_019",
+      "cause": "Sprained ankle with swelling and bruising.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T09:45:00",
+      "hospitalId": "hospital_A",
+      "department": "Orthopedics"
+    },
+    {
+      "caseId": "case_020",
+      "patientId": "patient_020",
+      "cause": "Acute ear pain and possible infection.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:50:00",
+      "hospitalId": "hospital_B",
+      "department": "ENT"
+    },
+    {
+      "caseId": "case_021",
+      "patientId": "patient_021",
+      "cause": "Severe abdominal cramps with diarrhea.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T09:55:00",
+      "hospitalId": "hospital_C",
+      "department": "Gastroenterology"
+    },
+    {
+      "caseId": "case_022",
+      "patientId": "patient_022",
+      "cause": "Chest tightness with moderate shortness of breath.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T10:00:00",
+      "hospitalId": "hospital_A",
+      "department": "Cardiology"
+    },
+    {
+      "caseId": "case_023",
+      "patientId": "patient_023",
+      "cause": "Mild skin rash with itching.",
+      "urgency": 4,
+      "arrivalTime": "2025-04-16T10:05:00",
+      "hospitalId": "hospital_B",
+      "department": "Dermatology"
+    },
+    {
+      "caseId": "case_024",
+      "patientId": "patient_024",
+      "cause": "Severe joint pain and swelling in the knee.",
+      "urgency": 2,
+      "arrivalTime": "2025-04-16T10:10:00",
+      "hospitalId": "hospital_C",
+      "department": "Rheumatology"
+    },
+    {
+      "caseId": "case_025",
+      "patientId": "patient_025",
+      "cause": "Acute dizziness with imbalance, possible vertigo.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T10:15:00",
+      "hospitalId": "hospital_A",
+      "department": "Neurology"
+    },
+    {
+      "caseId": "case_026",
+      "patientId": "patient_026",
+      "cause": "Uncontrolled bleeding from a deep cut.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T10:20:00",
+      "hospitalId": "hospital_B",
+      "department": "Emergency"
+    },
+    {
+      "caseId": "case_027",
+      "patientId": "patient_027",
+      "cause": "Worsening joint stiffness in hands and fingers.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T10:25:00",
+      "hospitalId": "hospital_C",
+      "department": "Rheumatology"
+    },
+    {
+      "caseId": "case_028",
+      "patientId": "patient_028",
+      "cause": "Burn injury on the face with blistering.",
+      "urgency": 1,
+      "arrivalTime": "2025-04-16T10:30:00",
+      "hospitalId": "hospital_A",
+      "department": "Emergency"
+    },
+    {
+      "caseId": "case_029",
+      "patientId": "patient_029",
+      "cause": "Sudden loss of appetite and extreme fatigue.",
+      "urgency": 3,
+      "arrivalTime": "2025-04-16T10:35:00",
+      "hospitalId": "hospital_B",
+      "department": "General Medicine"
+    },
+    {
+      "caseId": "case_030",
+      "patientId": "patient_030",
+      "cause": "Mild abdominal discomfort with intermittent pain.",
+      "urgency": 4,
+      "arrivalTime": "2025-04-16T10:40:00",
+      "hospitalId": "hospital_C",
+      "department": "Gastroenterology"
+    }
+  ]
+  

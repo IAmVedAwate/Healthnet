@@ -220,7 +220,9 @@ const AddDoctor = () => {
         .then((res) => setDepartments(res.data))
         .catch((err) => console.error("Error fetching departments:", err));
     }
+    console.log(departments)
   }, [hospitalId]);
+
 
   const formik = useFormik({
     initialValues: {
