@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const AddPatient = () => {
   const { id, token } = useSelector((state) => state.auth);
@@ -48,7 +49,7 @@ useEffect(() => {
         },
       })
       .then(() => {
-        alert("Patient added successfully");
+        toast.success("Patient added successfully");
         navigate("/patient/get");
       })
       .catch((error) => console.error("Error adding patient:", error));

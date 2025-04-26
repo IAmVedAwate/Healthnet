@@ -61,6 +61,7 @@ const RouteManager = () => {
       <Route path="/patient/get" element={<GetAllPatients />} />
             <Route path="/patient/add" element={<AddPatient />} />
             <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
+            <Route path="/patient/remove/:id" element={<DeletePatient />} />
     </>
   )}
 

@@ -84,6 +84,7 @@ import axios from "axios";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { Pencil, Trash } from "lucide-react";
+import { toast } from "react-toastify";
 
 const GetAllPatients = () => {
   const [patients, setPatients] = useState([]);
@@ -108,7 +109,7 @@ const GetAllPatients = () => {
         },
       })
       .then(() => {
-        alert("Patient deleted successfully");
+        toast.success("Patient deleted successfully");
         fetchPatients(); // Refresh the list after deletion
       })
       .catch((error) => console.error("Error deleting patient:", error));
