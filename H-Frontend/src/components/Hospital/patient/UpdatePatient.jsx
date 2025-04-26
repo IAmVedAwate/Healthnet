@@ -2,10 +2,29 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const UpdatePatient = () => {
-  const { token } = useSelector((state) => state.auth)
-  const {patientid} = useParams();
+  const { token ,id } = useSelector((state) => state.auth);
+  const { patientid } = useParams();
+  const navigate = useNavigate();
+  const [doctors, setDoctors] = useState([]);
+
+  // Fetch doctors when the component mounts
+useEffect(() => {
+  axios
+    .get(`http://localhost:5000/api/doctors/all/${id}`, {
+      headers: {
+        "access-token": token,
+      },
+    })
+    .then((response) => {
+      setDoctors(response.data); // Assuming the response contains the list of doctors
+    })
+    .catch((error) => console.error("Error fetching doctors:", error));
+}, [token]);
+
+
   const [updatedData, setUpdatedData] = useState({
     name: "",
     age: "",
@@ -13,143 +32,158 @@ const UpdatePatient = () => {
     contactInfo: "",
     doctorId: "",
     status: "Pending",
-    hospitalId: "d6224e00-b9fa-4cce-b3a8-6ae76df3c030"
-
+    hospitalId: id,
   });
-const navigate = useNavigate();
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedData({ ...updatedData, [name]: value });
-  };
 
   useEffect(() => {
-    const fetchEditable = () => {
-      axios
-        .get(`http://localhost:5000/api/patients/byId/${patientid}`, {
-          headers: {
-            "access-token": token,
-          },
-        })
-        .then((response) => {
-          setUpdatedData({
-            name: response.data.name,
-            age: response.data.age,
-            gender: response.data.gender,
-            contactInfo: response.data.contactInfo,
-            doctorId: response.data.doctorId,
-            status: response.data.status,
-            hospitalId: response.data.hospitalId
-          });
-        })
-        .catch((error) => console.error("Error fetching patient:", error));
-    };
-    fetchEditable();
-  }, []);
-  
+    axios
+      .get(`http://localhost:5000/api/patients/byId/${patientid}`, {
+        headers: { "access-token": token },
+      })
+      .then((res) => setUpdatedData(res.data))
+      .catch((err) => console.error("Error fetching patient:", err));
+  }, [patientid, token]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUpdatedData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/api/patients/${patientid}`, updatedData,{
-        headers: {
-          'access-token': token,
-        },
+      .put(`http://localhost:5000/api/patients/${patientid}`, updatedData, {
+        headers: { "access-token": token },
       })
-      .then(() => alert("Patient updated successfully"))
-      .catch((error) => console.error("Error updating patient:", error));
-    navigate("/patient/get");
+      .then(() => {
+        toast.success("Patient updated successfully");
+        navigate("/patient/get");
+      })
+      .catch((err) => console.error("Error updating patient:", err));
   };
 
   return (
-    <div className="container">
-      <div
-        className="card-header rounded-top-4 bg-gradient ml-0 p-3"
-        style={{ backgroundColor: '#a3ffcb' }}
-      >
-        <h1>Update Patient</h1>
+    <div className="max-w-4xl mx-auto px-6 py-10">
+      <div className="bg-green-100 rounded-t-lg px-6 py-4 shadow">
+        <h1 className="text-2xl font-bold text-green-900">Update Patient</h1>
       </div>
-      <div className="card-body shadow p-4">
-      
-      <form onSubmit={handleSubmit} className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">Name</label>
-          <input
-            type="text"
-            name="name"
-            defaultValue={updatedData.name}
-            className="form-control"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Age</label>
-          <input
-            type="number"
-            name="age"
-            defaultValue={updatedData.age}
-            className="form-control"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Gender</label>
-          <select
-            name="gender"
-            defaultValue={updatedData.gender}
-            className="form-select"
-            onChange={handleChange}
-            required
-          >
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Contact Info</label>
-          <input
-            type="text"
-            name="contactInfo"
-            defaultValue={updatedData.contactInfo}
-            className="form-control"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Assigned Doctor</label>
-          <input
-            type="text"
-            name="doctorId"
-            defaultValue={updatedData.doctorId}
-            className="form-control"
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="col-md-6">
-          <label className="form-label">Status</label>
-          <select
-            name="status"
-            defaultValue={updatedData.status}
-            className="form-select"
-            onChange={handleChange}
-            required
-          >
-            <option value="Pending">Pending</option>
-            <option value="Under Treatment">Under Treatment</option>
-            <option value="Discharged">Discharged</option>
-          </select>
-        </div>
-        <div className="col-12">
-          <button type="submit" className="btn btn-success">
-            Update
-          </button>
-          <Link to={"/patient/get"} className="mx-5 btn btn-outline-warning">Go Back</Link>
 
-        </div>
-      </form>
+      <div className="bg-white shadow-lg rounded-b-lg px-6 py-8">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={updatedData.name}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          {/* Age */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+            <input
+              type="number"
+              name="age"
+              value={updatedData.age}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+            <select
+              name="gender"
+              value={updatedData.gender}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Contact Info</label>
+            <input
+              type="text"
+              name="contactInfo"
+              value={updatedData.contactInfo}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-400"
+            />
+          </div>
+
+          {/* Doctor ID */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Assigned Doctor ID</label>
+            <div>
+
+
+ 
+  {/* Doctor selection dropdown */}
+  <select
+    name="doctorId"
+    value={updatedData.doctorId}
+    onChange={handleChange}
+    required
+    className="mt-1 p-2 w-full border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+  >
+    <option value="">Select Doctor</option>
+    {doctors.map((doctor) => (
+      <option key={doctor.doctorId} value={doctor.doctorId}>
+        Dr. {doctor.firstName} {doctor.lastName}
+      </option>
+    ))}
+  </select>
+</div>
+
+            
+          </div>
+
+          {/* Status */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select
+              name="status"
+              value={updatedData.status}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+              <option>Pending</option>
+              <option>Under Treatment</option>
+              <option>Discharged</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="col-span-1 md:col-span-2 flex justify-start items-center gap-4 mt-4">
+            <button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-md transition"
+            >
+              Update
+            </button>
+            <Link
+              to="/patient/get"
+              className="text-yellow-600 border border-yellow-400 hover:bg-yellow-100 px-5 py-2 rounded-md transition"
+            >
+              Go Back
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   );

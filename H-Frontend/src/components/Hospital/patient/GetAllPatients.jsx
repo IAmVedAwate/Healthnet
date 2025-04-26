@@ -120,7 +120,7 @@ const GetAllPatients = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-gradient-to-r from-blue-400 to-blue-200 rounded-t-lg p-3">
+      <div className="bg-gradient-to-r bg-indigo-600  rounded-t-lg p-3">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-semibold px-3">All Patients</h1>
           <Link

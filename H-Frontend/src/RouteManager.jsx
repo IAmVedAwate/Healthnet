@@ -59,7 +59,8 @@ const RouteManager = () => {
       <Route path="/doctor/getByid/:doctorid" element={<GetDoctorById />} />
       <Route path="/doctor/dashboard/:doctorid" element={<DoctorSlotManager />} />
       <Route path="/patient/get" element={<GetAllPatients />} />
-      <Route path="/patient/add" element={<AddPatient />} />
+            <Route path="/patient/add" element={<AddPatient />} />
+            <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
     </>
   )}
 
@@ -72,7 +73,7 @@ const RouteManager = () => {
       <Route path="/patient/add" element={<AddPatient />} />
       <Route path="/patient/remove/:id" element={<DeletePatient />} />
       <Route path="/patient/byId/:id" element={<GetPatientById />} />
-      <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
+      
     </>
   )}
 
