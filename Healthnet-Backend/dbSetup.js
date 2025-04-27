@@ -209,7 +209,6 @@ db.run(`
       CREATE TABLE IF NOT EXISTS Inventory (
         inventoryId TEXT PRIMARY KEY,
         hospitalId TEXT,
-        imanagerId TEXT,
         itemName TEXT NOT NULL,
         itemType TEXT,
         quantity INTEGER DEFAULT 0,
@@ -218,7 +217,6 @@ db.run(`
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId),
-        FOREIGN KEY (imanagerId) REFERENCES IManager(imanagerId)
       );
     `, (err) => { if (err) console.error("Error creating Inventory table:", err.message); });
 
