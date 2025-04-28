@@ -216,7 +216,7 @@ db.run(`
         receivedDate DATE,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId),
+        FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId)
       );
     `, (err) => { if (err) console.error("Error creating Inventory table:", err.message); });
 

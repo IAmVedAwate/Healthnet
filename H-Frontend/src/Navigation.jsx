@@ -10,11 +10,12 @@ const NavItem = ({ to, children, activeColor = "yellow-400", hoverColor = "white
     <NavLink
       to={to}
       className={({ isActive }) => `
-        relative p-4 text-white transition
-        after:content-[''] after:absolute after:left-0 after:bottom-2
-        after:h-[2px] after:bg-${hoverColor}
-        after:w-0 after:transition-all after:duration-300
-        ${isActive ? `text-${activeColor} after:w-full after:bg-${activeColor}` : "hover:after:w-full"}
+        relative p-4 text-white
+      ${isActive ? "text-yellow-400" : ""}
+      after:content-[''] after:absolute after:left-0 after:bottom-2
+      after:h-[2px] after:bg-white
+      after:w-0 after:transition-all after:duration-300
+      ${isActive ? "after:w-full after:bg-yellow-400" : "hover:after:w-full"}
       `}
     >
       {children}
