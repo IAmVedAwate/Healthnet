@@ -28,6 +28,7 @@ import DeletePatient from './components/Hospital/patient/DeletePatient';
 import { useSelector } from 'react-redux';
 import BookAppointment from './components/Hospital/patient/BookAppointment';
 import Navigation from './Navigation';
+import DoctorSelect from './components/Hospital/patient/doctorSelect';
 
 
 
@@ -71,7 +72,8 @@ const RouteManager = () => {
   {role === 'Patient' && (
     <>
       <Route path='/patients' element={<Home />} />
-      <Route path='/patients/book-appointment' element={<BookAppointment />} />
+            <Route path='/patients/book-appointment' element={<BookAppointment />} />
+            <Route path='/doctor-select/:hospitalId' element={<DoctorSelect />} />
       <Route path="/patient/get" element={<GetAllPatients />} />
       <Route path="/patient/add" element={<AddPatient />} />
       <Route path="/patient/remove/:id" element={<DeletePatient />} />
