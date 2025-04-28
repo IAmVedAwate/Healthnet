@@ -1,14 +1,13 @@
 import sqlite3
 
 # Connect to the HealthNet database
-conn = sqlite3.connect('HealthNet.db')
+conn = sqlite3.connect('D:\Healthnet\Healthnet-Backend\HealthNet.db')
 cursor = conn.cursor()
 
 try:
-    cursor.execute("DROP TABLE IF EXISTS Hospital;")
-    print("Doctor table dropped successfully.")
-    cursor.execute("DROP TABLE IF EXISTS SignupRequest;")
-    print("SignupRequest table dropped successfully.")
+    cursor.execute("DROP TABLE IF EXISTS Appointment;")
+    print("Appointment table dropped successfully.")
+
 except Exception as e:
     print("SignupRequest dropping Doctor table:", e)
 
