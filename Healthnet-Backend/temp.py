@@ -1,7 +1,7 @@
 import sqlite3
 
 # Connect to the HealthNet database
-conn = sqlite3.connect('D:\Healthnet\Healthnet-Backend\HealthNet.db')
+conn = sqlite3.connect('D:\Mega project git\Healthnet-Backend\HealthNet.db')
 cursor = conn.cursor()
 
 try:

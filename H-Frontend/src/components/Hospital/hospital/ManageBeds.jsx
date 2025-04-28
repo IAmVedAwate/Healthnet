@@ -252,7 +252,7 @@ const ManageBeds = () => {
 
   const handleSelectPatient = async (bedId, patient) => {
     try {
-      await axios.put(`http://localhost:5000/api/rooms/beds/${bedId}/assign`, { patientId: patient.patientId });
+      await axios.put(`http://localhost:5000/api/rooms/beds/${bedId}/assign`, { patientId: patient.patientDataId });
       setMessage('Bed assigned successfully.');
       fetchBeds();
       fetchPatients();
@@ -290,8 +290,8 @@ const ManageBeds = () => {
             <thead className="bg-gray-100 text-left text-gray-700 text-sm uppercase font-semibold">
               <tr>
                 <th className="p-3 border-b">Bed ID</th>
+                <th className="p-3 border-b">Patient Search</th>
                 <th className="p-3 border-b">Patient Name</th>
-                <th className="p-3 border-b">Patient ID</th>
                 <th className="p-3 border-b text-right">Action</th>
               </tr>
             </thead>
@@ -323,7 +323,7 @@ const ManageBeds = () => {
                         </ul>
                       )}
                     </td>
-                    <td className="p-3">{bed.patientId}</td>
+                    <td className="p-3">{bed.patientName} ({ bed.patientId})</td> 
                     <td className="p-3 text-right">
                       {bed.occupied ? (
                         <button

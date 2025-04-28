@@ -173,7 +173,15 @@ router.delete('/:roomId', async (req, res) => {
 router.get('/:roomId/beds', async (req, res) => {
     try {
         const { roomId } = req.params;
-        const beds = await dbAll("SELECT * FROM Bed WHERE roomId = ?", [roomId]);
+        const beds = await dbAll(
+  `SELECT b.*, p.name AS patientName
+   FROM Bed b
+   LEFT JOIN PatientData p ON b.patientId = p.patientDataId
+   WHERE b.roomId = ?`,
+  [roomId]
+);
+
+
         return res.status(200).json(beds);
     } catch (err) {
         console.error(err);
@@ -213,12 +221,13 @@ router.put('/beds/:bedId/assign', async (req, res) => {
 
         // Fetch patient's username using INNER JOIN
         const assignedPatient = await dbGet(
-            `SELECT p.username 
-             FROM Bed b
-             INNER JOIN Patient p ON b.patientId = p.patientId
-             WHERE b.bedId = ?`,
-            [bedId]
-        );
+  `SELECT p.name 
+   FROM Bed b
+   LEFT JOIN PatientData p ON b.patientId = p.patientDataId
+   WHERE b.bedId = ?`,
+  [bedId]
+);
+
 
         if (!assignedPatient) {
             return res.status(404).json({ msg: 'Patient not found after assignment' });
@@ -226,7 +235,7 @@ router.put('/beds/:bedId/assign', async (req, res) => {
 
         return res.status(200).json({ 
             msg: 'Bed assigned successfully', 
-            assignedPatientName: assignedPatient.username 
+            assignedPatient: assignedPatient.name 
         });
 
     } catch (err) {
