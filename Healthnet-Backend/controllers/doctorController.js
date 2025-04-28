@@ -63,6 +63,20 @@ const addDoctor = async (req, res) => {
   }
 };
 
+const submitUrgency = async (req, res) => {
+  try {
+    const { urgency, appointmentId} = req.body;
+    await dbRun("UPDATE Appointment SET urgency = ?, status = ? WHERE appointmentId = ?;", [urgency,"Approved",appointmentId]);
+    const appointment = await dbGet("SELECT * FROM Appointment WHERE appointmentId = ?", [appointmentId]);
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.status(200).json(appointment);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 /**
  * GET /api/doctors/:id
  * Retrieves a doctor by doctorId.
@@ -236,5 +250,6 @@ module.exports = {
   deleteDoctor,
   getAllDoctors,
   loginDoctorByPin,
-  toggleDoctorStatus
+  toggleDoctorStatus,
+  submitUrgency
 };
