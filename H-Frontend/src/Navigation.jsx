@@ -5,6 +5,23 @@ import { logout } from './store/authSlice';
 import { toast } from "react-toastify";
 
 
+const NavItem = ({ to, children, activeColor = "yellow-400", hoverColor = "white" }) => {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) => `
+        relative p-4 text-white transition
+        after:content-[''] after:absolute after:left-0 after:bottom-2
+        after:h-[2px] after:bg-${hoverColor}
+        after:w-0 after:transition-all after:duration-300
+        ${isActive ? `text-${activeColor} after:w-full after:bg-${activeColor}` : "hover:after:w-full"}
+      `}
+    >
+      {children}
+    </NavLink>
+  );
+};
+
 function Navigation() {
 
   const { token, role } = useSelector((state) => state.auth);
@@ -28,30 +45,23 @@ function Navigation() {
           </div>
 
           {/* Links */}
-          <div className="hidden md:flex md:items-center md:space-x-6 text-sm font-medium ">
-            <Link to="/" className=" transition ">
-              Home
-            </Link>
+            <div className="hidden md:flex md:items-center md:space-x-6 text-sm font-medium">
+              <NavItem to="/">Home</NavItem>
 
-            {role === 'Hospital' && (
-              <>
-                <Link to="/doctor/get" className="">
-                  Doctors
-                </Link>
-                <Link to="/room/get" className="no-underline">
-                  Hospital Management
-                </Link>
-                <Link to="/patient/get" className="">
-                  Patients
-                </Link>
-              </>
-            )}
-            {role === "Patient" && (
-              <>
-              <NavLink to={"/patients/book-appointment"} className=''>Appointment</NavLink>
-              </>
-            )}
-          </div>
+              {role === "Admin" && <NavItem to="/admin">Dashboard</NavItem>}
+
+              {role === "Hospital" && (
+                <>
+                  <NavItem to="/doctor/get">Doctors</NavItem>
+                  <NavItem to="/room/get">Hospital Management</NavItem>
+                  <NavItem to="/patient/get">Patients</NavItem>
+                </>
+              )}
+
+              {role === "Patient" && (
+                <NavItem to="/patients/book-appointment">Appointment</NavItem>
+              )}
+            </div>
 
           {/* Actions */}
           <div className="flex items-center space-x-2">

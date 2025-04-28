@@ -275,7 +275,7 @@ const ManageBeds = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className=" p-6">
       <div className="bg-indigo-600 p-5 rounded-t-lg shadow-md">
         <h1 className="text-2xl font-semibold ">Manage Beds for Room {effectiveRoomName}</h1>
       </div>
