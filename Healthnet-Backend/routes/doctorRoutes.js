@@ -7,7 +7,8 @@ const {
   updateDoctor,
   deleteDoctor,
   loginDoctorByPin,
-  toggleDoctorStatus
+  toggleDoctorStatus,
+  submitUrgency
 } = require('../controllers/doctorController');
 
 const router = express.Router();
@@ -26,4 +27,5 @@ router.put('/:id', updateDoctor); // Update doctor details
 router.delete('/:id', deleteDoctor); // Remove a doctor by ID
 router.post('/auth', loginDoctorByPin);
 router.patch('/:id/status', toggleDoctorStatus);
+router.post('/urgency', submitUrgency);
 module.exports = router;

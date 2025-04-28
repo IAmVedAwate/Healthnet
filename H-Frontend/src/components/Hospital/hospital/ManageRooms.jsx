@@ -97,7 +97,7 @@ const ManageRooms = () => {
   };
 
   return (
-    <div className="px-6 py-8 max-w-7xl mx-auto">
+    <div className="px-6 py-8 ">
       <div className="rounded-t-xl bg-indigo-600 p-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold ">Manage Rooms</h1>
       </div>

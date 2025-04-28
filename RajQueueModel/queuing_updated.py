@@ -1,7 +1,7 @@
 import sqlite3
 import json
 import datetime
-import heapq
+import uuid
 from flask import Flask, request, jsonify, g
 from transformers import AutoTokenizer, AutoModel
 import torch
@@ -10,8 +10,7 @@ import torch.nn.functional as F
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-
-DATABASE = 'HealthNet.db'
+DATABASE = 'D:\Healthnet\Healthnet-Backend\HealthNet.db'
 
 # ---------------------
 # Database Functions
@@ -21,6 +20,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
     db.execute("PRAGMA foreign_keys = ON;")
     return db
 
@@ -44,106 +44,38 @@ def get_text_embedding(text):
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=128)
     with torch.no_grad():
         outputs = model(**inputs)
-    # Use the first token's embedding ([CLS] token)
     embedding = outputs.last_hidden_state[:, 0, :]
     return embedding
 
 # ---------------------
 # Define a Simple Classifier Model
 # ---------------------
-# This simple classifier uses a linear layer followed by softmax.
-# In a production setting, this should be pre-trained and fine-tuned on labeled data.
 class EmbeddingClassifier(nn.Module):
     def __init__(self, input_dim=768, num_classes=4):
         super(EmbeddingClassifier, self).__init__()
         self.linear = nn.Linear(input_dim, num_classes)
-    
     def forward(self, x):
         logits = self.linear(x)
-        probabilities = F.softmax(logits, dim=1)
-        return probabilities
+        return F.softmax(logits, dim=1)
 
-# Instantiate the classifier. In our case, the default Bio_ClinicalBERT embedding dimension is 768.
 embedding_classifier = EmbeddingClassifier()
-
-# Mapping the classifier's output indices to labels.
-priority_labels = {
-    0: "Critical/Emergency",
-    1: "High Priority",
-    2: "Moderate Priority",
-    3: "Low Priority"
-}
+priority_labels = {0: "Critical/Emergency", 1: "High Priority", 2: "Moderate Priority", 3: "Low Priority"}
 
 def advanced_classify(embedding):
-    """
-    Given an embedding tensor, use the classifier to get probabilities and a predicted label.
-    The input embedding shape is assumed to be [1, 768].
-    """
-    probs = embedding_classifier(embedding)  # Get probabilities from classifier.
-    pred_index = torch.argmax(probs, dim=1).item()  # Get the index with highest probability.
+    probs = embedding_classifier(embedding)
+    pred_index = torch.argmax(probs, dim=1).item()
     pred_label = priority_labels.get(pred_index, "Unknown Priority")
     return pred_label, probs.squeeze().tolist()
 
 # ---------------------
-# Priority Queue Setup
+# Time Utilities
 # ---------------------
-class PatientCase:
-    def __init__(self, case_data, embedding):
-        """
-        Initialize a PatientCase instance with flexible arrivalTime parsing.
-        """
-        self.caseId = case_data.get("caseId")
-        self.patientId = case_data.get("patientId")
-        self.cause = case_data.get("cause")
-        self.urgency = int(case_data.get("urgency", 3))  # Default to least urgent if missing
-        self.hospitalId = case_data.get("hospitalId")
-        self.department = case_data.get("department")
-        self.embedding = embedding
-        self.scheduledTime = None  # Will be set when scheduled (as "HH:MM")
-
-        arrival_time_str = case_data.get("arrivalTime")
-        self.arrivalTime = self.parse_arrival_time(arrival_time_str)
-
-    def parse_arrival_time(self, time_str):
-        if not time_str:
-            print("Warning: arrivalTime missing.")
-            return datetime.min  # Use very early time to avoid scheduling issues
-        try:
-            return datetime.fromisoformat(time_str)
-        except ValueError:
-            try:
-                # Try fixing common issue: missing 'T'
-                if 'T' not in time_str and ' ' in time_str:
-                    return datetime.fromisoformat(time_str.replace(' ', 'T'))
-                # Try strptime as fallback
-                return datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
-            except Exception as e:
-                print(f"Warning: Failed to parse arrivalTime '{time_str}': {e}")
-                return datetime.min
-
-    def __lt__(self, other):
-        if self.urgency == other.urgency:
-            return self.arrivalTime < other.arrivalTime
-        return self.urgency < other.urgency
-
-# Global priority queue list
-priority_queue = []
-
-def enqueue_case(case_data):
-    embedding_tensor = get_text_embedding(case_data["cause"])
-    case = PatientCase(case_data, embedding_tensor)
-    heapq.heappush(priority_queue, case)
-    return case
-
-
 def increment_time_str(time_str):
-    """Increment a time string (HH:MM) by 15 minutes."""
     t = datetime.strptime(time_str, "%H:%M")
     t += timedelta(minutes=15)
     return t.strftime("%H:%M")
 
 def time_str_to_minutes(time_str):
-    """Convert HH:MM to total minutes."""
     h, m = map(int, time_str.split(":"))
     return h * 60 + m
 
@@ -186,8 +118,9 @@ def get_available_slot(hospitalId, department):
 
     return None
 
+
 # ---------------------
-# API Endpoints
+# Appointment Operations
 # ---------------------
 @app.route('/')
 def index():
@@ -196,126 +129,152 @@ def index():
 @app.route('/enqueue_case', methods=['POST'])
 def api_enqueue_case():
     """
-    Enqueue a case record into the priority queue.
-    Expects JSON with fields: caseId, patientId, cause, urgency, arrivalTime, hospitalId, department.
+    Insert a new appointment into the Appointment table.
+    Expects JSON with: hospitalId, departmentId,
+    patientId, arrivalTime (ISO), cause, urgency (int/string).
+    (appointmentId is auto-generated as a UUID)
     """
-    try:
-        case_data = request.get_json()
-        required_fields = ["caseId", "patientId", "cause", "urgency", "arrivalTime", "hospitalId", "department"]
-        if not all(field in case_data for field in required_fields):
-            return jsonify({"error": "Missing one or more required fields"}), 400
+    data = request.get_json()
+    required = ["hospitalId", "departmentId", "patientId", "arrivalTime", "cause"]
+    if not all(field in data for field in required):
+        return jsonify({"error": "Missing one or more required fields"}), 400
 
-        case = enqueue_case(case_data)
-        response = {
-            "message": "Case enqueued successfully.",
-            "caseId": case.caseId,
-            "urgency": case.urgency,
-            "arrivalTime": case.arrivalTime.isoformat()
-        }
-        return jsonify(response)
+    appointment_id = str(uuid.uuid4())  # <-- generate a new UUID for appointmentId
+    # urgency = classify_case(data['urgency'])
+    db = get_db()
+    try:
+        db.execute(
+            """
+            INSERT INTO Appointment
+            (appointmentId, hospitalId, departmentId, patientId, arrivalTime, status, cause, urgency)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                appointment_id, data['hospitalId'], data['departmentId'],
+                data['patientId'], data['arrivalTime'], "Pending" , data['cause'], str(0)
+            )
+        )
+        db.commit()
+        return jsonify({"message": "Appointment enqueued successfully.", "appointmentId": appointment_id}), 201
+    except sqlite3.IntegrityError as e:
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/get_queue', methods=['GET'])
 def get_queue():
     """
-    Returns the current priority queue listing caseId, urgency, arrivalTime, hospitalId, and department.
+    Fetch pending appointments for a specific hospital, ordered by:
+      1) arrivalTime (ascending)
+      2) urgency (ascending) for ties on arrivalTime.
+
+    Expects query parameter:
+      - hospitalId: UUID of the hospital
     """
+    hospital_id = request.args.get('hospitalId')
+    if not hospital_id:
+        return jsonify({"error": "Query parameter 'hospitalId' is required."}), 400
+
+    db = get_db()
     try:
-        sorted_queue = sorted(priority_queue)
-        data = [
-            {
-                "caseId": case.caseId,
-                "urgency": case.urgency,
-                "arrivalTime": case.arrivalTime.isoformat(),
-                "hospitalId": case.hospitalId,
-                "department": case.department
-            }
-            for case in sorted_queue
-        ]
-        return jsonify(data)
+        cursor = db.execute(
+            """
+            SELECT
+                appointmentId,
+                hospitalId,
+                departmentId,
+                patientId,
+                arrivalTime,
+                cause,
+                urgency
+            FROM Appointment
+            WHERE hospitalId = ? AND status = 'Approved'
+            ORDER BY
+                DATE(arrivalTime)     ASC,
+                CAST(urgency AS INTEGER) ASC
+            """,
+            (hospital_id,)
+        )
+        rows = cursor.fetchall()
+        data = [dict(r) for r in rows]
+        return jsonify(data), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/schedule_next', methods=['POST'])
 def schedule_next():
+    """
+    Schedule the highest-priority appointment and remove it from DB.
+    """
+    db = get_db()
     try:
-        if not priority_queue:
-            return jsonify({"message": "No cases in the queue."}), 200
+        # Fetch next appointment
+        row = db.execute(
+            "SELECT * FROM Appointment WHERE status = 'Approved'"
+            " ORDER BY CAST(urgency AS INTEGER) ASC, arrivalTime ASC LIMIT 1"
+        ).fetchone()
+        if not row:
+            return jsonify({"message": "No appointments pending."}), 200
 
-        next_case = heapq.heappop(priority_queue)
-        slot = get_available_slot(next_case.hospitalId, next_case.department)
+        # Find slot
+        slot = get_available_slot(row['hospitalId'], row['departmentId'])
         if slot:
+            # Delete the appointment
+            db.execute("DELETE FROM Appointment WHERE appointmentId = ?", (row['appointmentId'],))
+            db.commit()
             scheduled_info = {
-                "caseId": next_case.caseId,
-                "patientId": next_case.patientId,
-                "scheduledDoctor": slot["doctorId"],
-                "slotId": slot["slotId"],
-                "slotStartTime": slot["slotStartTime"],
-                "slotEndTime": slot["slotEndTime"],
-                "hospitalId": next_case.hospitalId,
-                "department": next_case.department
+                "appointmentId": row['appointmentId'],
+                "patientId": row['patientId'],
+                "scheduledDoctor": slot['doctorId'],
+                "slotId": slot['slotId'],
+                "slotStartTime": slot['slotStartTime'],
+                "slotEndTime": slot['slotEndTime'],
+                "hospitalId": row['hospitalId'],
+                "departmentId": row['departmentId']
             }
-            return jsonify({
-                "message": "Case scheduled successfully.",
-                "scheduling": scheduled_info
-            })
+            return jsonify({"message": "Appointment scheduled successfully.", "scheduling": scheduled_info}), 200
         else:
-            heapq.heappush(priority_queue, next_case)
-            return jsonify({"message": "No available slots at this time. Case remains in queue."}), 200
-
+            return jsonify({"message": "No available slots. Appointment remains pending."}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-@app.route('/classify_case', methods=['POST'])
-def classify_case():
+def classify_case(urgency):
     """
-    A simple classification endpoint based solely on the provided urgency field.
+    Classification based on provided urgency field.
     """
     try:
-        data = request.get_json()
-        if "urgency" not in data:
+        if "urgency" == None:
             return jsonify({"error": "Field 'urgency' is required."}), 400
-        urgency = int(data["urgency"])
-        if urgency == 1:
+        u = int(urgency)
+        if u == 1:
             label = "Critical/Emergency"
-        elif urgency == 2:
+        elif u == 2:
             label = "High Priority"
-        elif urgency == 3:
+        elif u == 3:
             label = "Moderate Priority"
-        elif urgency >= 4:
+        elif u >= 4:
             label = "Low Priority"
         else:
             label = "Unknown Priority"
-        return jsonify({"urgency": urgency, "priorityLabel": label})
+        return label
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/classify_advanced', methods=['POST'])
 def classify_advanced():
     """
-    An advanced classification endpoint that uses the extracted embedding from the case "cause" text.
-    It passes the embedding through a classifier (a simple linear layer) to predict a priority label.
-    Expects JSON with a "cause" field (and other case data optionally).
+    Advanced classification using text embedding.
     """
     try:
         data = request.get_json()
         if "cause" not in data:
-            return jsonify({"error": "Field 'cause' is required for classification."}), 400
-
-        # Extract embedding from the cause text
-        embedding_tensor = get_text_embedding(data["cause"])
-        # Use the classifier to get predicted label and probabilities
-        predicted_label, probabilities = advanced_classify(embedding_tensor)
-
-        response = {
-            "predictedPriorityLabel": predicted_label,
-            "probabilities": probabilities
-        }
-        return jsonify(response)
+            return jsonify({"error": "Field 'cause' is required."}), 400
+        emb = get_text_embedding(data["cause"])
+        label, probs = advanced_classify(emb)
+        return jsonify({"predictedPriorityLabel": label, "probabilities": probs})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5050)

@@ -39,8 +39,7 @@ const RouteManager = () => {
       <Navigation />
           <Routes>
   <Route path="/" element={<Home />} />
-  <Route path="/room/get" element={<ManageRooms />} />
-  <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
+
   <Route path="/hospital/get" element={<GetAllHospitals />} />
   <Route path="/hospital/getByid/:hospitalid" element={<GetHospitalById />} />
 
@@ -62,6 +61,9 @@ const RouteManager = () => {
             <Route path="/patient/add" element={<AddPatient />} />
             <Route path="/patient/edit/:patientid" element={<UpdatePatient />} />
             <Route path="/patient/remove/:id" element={<DeletePatient />} />
+
+            <Route path="/room/get" element={<ManageRooms />} />
+  <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
     </>
   )}
 
