@@ -30,47 +30,26 @@ router.post('/', async (req, res) => {
 
         const roomId = uuidv4();
         // Insert new room record.
-        
         await dbRun(
             `INSERT INTO Room (roomId, hospitalId, roomName, roomType, availabilityStatus, description, createdAt, updatedAt)
-            VALUES (?, ?, ?, ?, 1, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+         VALUES (?, ?, ?, ?, 1, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
             [roomId, hospitalId, roomName, roomType, description]
-);
-
-// Create bed records based on bedCount.
+        );
+        // Create bed records based on bedCount.
         for (let i = 0; i < bedCount; i++) {
-    // Custom Bed ID: roomName-BED-i+1
-            const bedId = `${roomName}-BED-${i + 1}`;
-    
+            const bedId = uuidv4();
             await dbRun(
                 `INSERT INTO Bed (bedId, roomId, status, patientId, createdAt, updatedAt)
-                 VALUES (?, ?, 'Unoccupied', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
+           VALUES (?, ?, 'Unoccupied', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
                 [bedId, roomId]
             );
         }
-
-return res.status(201).json({ msg: "Room created successfully", roomId });
-
-} catch (err) {
-    console.error(err);
-    return res.status(500).json({ msg: "Server error", error: err.message });
-}
+        return res.status(201).json({ msg: "Room created successfully", roomId });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ msg: "Server error", error: err.message });
+    }
 });
-// await dbRun(
-//             `INSERT INTO Room (roomId, hospitalId, roomName, roomType, availabilityStatus, description, createdAt, updatedAt)
-//          VALUES (?, ?, ?, ?, 1, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-//             [roomId, hospitalId, roomName, roomType, description]
-//         );
-//         // Create bed records based on bedCount.
-//         for (let i = 0; i < bedCount; i++) {
-//             const bedId = uuidv4();
-//             await dbRun(
-//                 `INSERT INTO Bed (bedId, roomId, status, patientId, createdAt, updatedAt)
-//            VALUES (?, ?, 'Unoccupied', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-//                 [bedId, roomId]
-//             );
-//         }
-//         return res.status(201).json({ msg: "Room created successfully", roomId });
 
 /**
  * GET /rooms
@@ -195,29 +174,26 @@ router.get('/:roomId/beds', async (req, res) => {
  * Expects JSON body: { patientId: 'some-patient-id' }
  * Prevents the same patient from being assigned to more than one bed.
  */
-
 router.put('/beds/:bedId/assign', async (req, res) => {
     try {
         const { bedId } = req.params;
         const { patientId } = req.body;
-
         if (!patientId) {
             return res.status(400).json({ msg: 'Missing patientId in request body' });
         }
-
         // Check if the patient is already assigned to any bed.
         const existingAssignment = await dbGet("SELECT * FROM Bed WHERE patientId = ?", [patientId]);
         if (existingAssignment) {
             return res.status(400).json({ msg: 'This patient is already assigned to a bed.' });
         }
-
         // Update the bed: assign the patient and mark as Occupied.
         await dbRun(
             `UPDATE Bed 
-             SET patientId = ?, status = 'Occupied', updatedAt = CURRENT_TIMESTAMP 
-             WHERE bedId = ?`,
+         SET patientId = ?, status = 'Occupied', updatedAt = CURRENT_TIMESTAMP 
+         WHERE bedId = ?`,
             [patientId, bedId]
         );
+<<<<<<< HEAD
 
         // Fetch patient's username using INNER JOIN
         const assignedPatient = await dbGet(
@@ -238,37 +214,14 @@ router.put('/beds/:bedId/assign', async (req, res) => {
             assignedPatient: assignedPatient.name 
         });
 
+=======
+        return res.status(200).json({ msg: 'Bed assigned successfully' });
+>>>>>>> 6ce32373bb874b994e461b7daf2b65e9679e9785
     } catch (err) {
         console.error(err);
         return res.status(500).json({ msg: 'Server error', error: err.message });
     }
 });
-
-// router.put('/beds/:bedId/assign', async (req, res) => {
-//     try {
-//         const { bedId } = req.params;
-//         const { patientId } = req.body;
-//         if (!patientId) {
-//             return res.status(400).json({ msg: 'Missing patientId in request body' });
-//         }
-//         // Check if the patient is already assigned to any bed.
-//         const existingAssignment = await dbGet("SELECT * FROM Bed WHERE patientId = ?", [patientId]);
-//         if (existingAssignment) {
-//             return res.status(400).json({ msg: 'This patient is already assigned to a bed.' });
-//         }
-//         // Update the bed: assign the patient and mark as Occupied.
-//         await dbRun(
-//             `UPDATE Bed 
-//          SET patientId = ?, status = 'Occupied', updatedAt = CURRENT_TIMESTAMP 
-//          WHERE bedId = ?`,
-//             [patientId, bedId]
-//         );
-//         return res.status(200).json({ msg: 'Bed assigned successfully' });
-//     } catch (err) {
-//         console.error(err);
-//         return res.status(500).json({ msg: 'Server error', error: err.message });
-//     }
-// });
 
 /**
  * PUT /rooms/beds/:bedId/discharge

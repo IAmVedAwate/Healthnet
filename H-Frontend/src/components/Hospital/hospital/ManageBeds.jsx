@@ -223,7 +223,7 @@ const ManageBeds = () => {
         showDropdown: false,
         dropdownMatches: [],
       }));
-      setBeds(fetchedBeds); 
+      setBeds(fetchedBeds);
     } catch (err) {
       console.error('Error fetching beds:', err);
       setMessage(err.response?.data?.msg || 'Error fetching beds');
@@ -240,7 +240,7 @@ const ManageBeds = () => {
         if (bed.bedId === bedId && !bed.occupied) {
           const matches = value.length > 0
             ? allPatients.filter(p =>
-                p.name.toLowerCase().includes(value.toLowerCase())
+                p.username.toLowerCase().includes(value.toLowerCase())
               ).slice(0, 5)
             : [];
           return { ...bed, patientName: value, showDropdown: value.length > 0, dropdownMatches: matches };
@@ -313,11 +313,11 @@ const ManageBeds = () => {
                         <ul className="absolute z-10 bg-white shadow-lg rounded w-full mt-1 border max-h-40 overflow-y-auto">
                           {bed.dropdownMatches.map(match => (
                             <li
-                              key={match.patientDataId}
+                              key={match.patientId}
                               onClick={() => handleSelectPatient(bed.bedId, match)}
                               className="px-4 py-2 cursor-pointer hover:bg-emerald-100"
                             >
-                              {match.name} ({match.contactInfo})
+                              {match.username} ({match.email})
                             </li>
                           ))}
                         </ul>

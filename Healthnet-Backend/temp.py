@@ -5,7 +5,7 @@ conn = sqlite3.connect('D:\Mega project git\Healthnet-Backend\HealthNet.db')
 cursor = conn.cursor()
 
 try:
-    cursor.execute("DROP TABLE IF EXISTS Bed;")
+    cursor.execute("DROP TABLE IF EXISTS Appointment;")
     print("Appointment table dropped successfully.")
 
 except Exception as e:

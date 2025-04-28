@@ -50,7 +50,7 @@ const addPatient = async (req, res) => {
 
 const getAllPatientsForBill = async (req, res) => {
   try {
-    const patients = await dbAll("SELECT * FROM PatientData;");
+    const patients = await dbAll("SELECT * FROM Patient;");
     res.status(200).json(patients);
   } catch (error) {
     console.error(error.message);
