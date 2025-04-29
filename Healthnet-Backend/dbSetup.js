@@ -162,6 +162,7 @@ db.run(`
         appointmentId TEXT PRIMARY KEY,
         hospitalId TEXT,
         departmentId TEXT,
+        doctorId TEXT,
         patientId TEXT,
         arrivalTime DATETIME,
         cause TEXT,
@@ -169,6 +170,7 @@ db.run(`
         status TEXT,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (doctorId) REFERENCES Doctor(doctorId),
         FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId),
         FOREIGN KEY (departmentId) REFERENCES Department(departmentId),
         FOREIGN KEY (patientId) REFERENCES Patient(patientId)

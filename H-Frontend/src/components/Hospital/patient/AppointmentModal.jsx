@@ -67,19 +67,33 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const appointmentTime = values.appointmentDateTime.toISOString();
+      const appointmentTime = new Date(values.appointmentDateTime.getTime() + (5.5 * 60 * 60 * 1000))
+  .toISOString()
+  .slice(0, 19)
+  //.replace('T', ' ');
 
-      await axios.post('http://localhost:5000/api/appointments/book', {
+      console.log(appointmentTime);
+  //     const qq = await axios.get(`http://localhost:5050/get_queue?hospitalId=d6224e00-b9fa-4cce-b3a8-6ae76df3c030`)
+  //  console.log(qq.data)
+
+      const res = await axios.post('http://localhost:5050/enqueue_case', {
         doctorId: doctor.doctorId,
+        hospitalId:doctor.hospitalId,
         patientId: patient.patientId,
-        slotId: values.selectedSlot,
-        appointmentTime,
-        issue: values.issue,
+        departmentId: doctor.departmentId,
+        //slotId: values.selectedSlot,
+        arrivalTime:appointmentTime,
+        cause: values.issue,
+        urgency: '0',
+        stauts:"Pending",
       });
+
+      
 
       toast.success('Appointment booked!');
       onClose();
     } catch (error) {
+      console.log(error)
       toast.error('Failed to book appointment');
     } finally {
       setSubmitting(false);
