@@ -5,19 +5,22 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AppointmentModal from './AppointmentModal'; // Import modal component
 
+
 const DoctorSelect = () => {
   const [doctors, setDoctors] = useState([]);
   const [slotsByDoctor, setSlotsByDoctor] = useState({});
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const { hospitalId } = useParams();
+  
 
   useEffect(() => {
     const fetchDoctorsAndSlots = async () => {
       try {
         const doctorsRes = await axios.get(`http://localhost:5000/api/doctors/all/${hospitalId}`);
         const doctorsData = doctorsRes.data;
-          setDoctors(doctorsData);
-          
+        setDoctors(doctorsData);
+        
+        
 
         const slotsData = {};
         await Promise.all(

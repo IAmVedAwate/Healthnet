@@ -6,7 +6,8 @@ const {
   getPatientById,
   deletePatient,
   updatePatient,
-  getAllPatientsForBill
+  getAllPatientsForBill,
+  patientProfile
 } = require('../controllers/patientController');
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.get('/all', getAllPatients); // Fetch all doctors
 router.get('/', getAllPatientsForBill); // Fetch all doctors
 router.put('/:id', updatePatient); // Update doctor details
 router.delete('/:id', deletePatient); // Remove a doctor by ID
+router.get("/me/:id", patientProfile);
 
 module.exports = router;

@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-DATABASE = 'D:\Healthnet\Healthnet-Backend\HealthNet.db'
+DATABASE = r'D:\Healthnet\Healthnet-Backend\HealthNet.db'
 
 # ---------------------
 # Database Functions
