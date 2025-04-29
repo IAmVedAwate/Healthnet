@@ -73,8 +73,7 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
   //.replace('T', ' ');
 
       console.log(appointmentTime);
-  //     const qq = await axios.get(`http://localhost:5050/get_queue?hospitalId=d6224e00-b9fa-4cce-b3a8-6ae76df3c030`)
-  //  console.log(qq.data)
+  
 
       const res = await axios.post('http://localhost:5050/enqueue_case', {
         doctorId: doctor.doctorId,
@@ -86,6 +85,10 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
         cause: values.issue,
         urgency: '0',
         stauts:"Pending",
+      }, {
+        headers: {
+          'Content-Type': 'application/json', // 🛠️ Use simple content type
+        }
       });
 
       

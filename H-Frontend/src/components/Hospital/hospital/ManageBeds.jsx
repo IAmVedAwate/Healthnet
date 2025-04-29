@@ -323,7 +323,7 @@ const ManageBeds = () => {
                         </ul>
                       )}
                     </td>
-                    <td className="p-3">{bed.patientName} ({ bed.patientId})</td> 
+                    <td className="p-3">{bed.patientName} </td> 
                     <td className="p-3 text-right">
                       {bed.occupied ? (
                         <button

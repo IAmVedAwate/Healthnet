@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Pencil, Check, X } from 'lucide-react';
 import { useParams } from 'react-router';
+import DocAppointment from './DocAppointment';
 
 const DoctorSlotManager = () => {
   const { doctorid } = useParams();
@@ -251,6 +252,7 @@ return (
 
     {/* Rendering slot cards; checking if slots is an array */}
     {Array.isArray(slots) && slots.map((slot) => slotCard(slot))}
+    <DocAppointment doctorId={doctorid } />
   </div>
 );
 

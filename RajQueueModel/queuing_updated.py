@@ -3,6 +3,7 @@ import json
 import datetime
 import uuid
 from flask import Flask, request, jsonify, g
+from flask_cors import CORS
 from transformers import AutoTokenizer, AutoModel
 import torch
 import torch.nn as nn
@@ -10,7 +11,9 @@ import torch.nn.functional as F
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-DATABASE = r'D:\Healthnet\Healthnet-Backend\HealthNet.db'
+CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+DATABASE = r'D:\Study\Sem8\Mega Project - 11-04-25\Healthnet-main\Healthnet-Backend\HealthNet.db'
+
 
 # ---------------------
 # Database Functions
@@ -146,11 +149,11 @@ def api_enqueue_case():
         db.execute(
             """
             INSERT INTO Appointment
-            (appointmentId, hospitalId, departmentId, patientId, arrivalTime, status, cause, urgency)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            (appointmentId, hospitalId, departmentId, doctorId, patientId, arrivalTime, status, cause, urgency)
+            VALUES (?, ?, ?, ?, ?,?, ?, ?, ?)
             """,
             (
-                appointment_id, data['hospitalId'], data['departmentId'],
+                appointment_id, data['hospitalId'], data['departmentId'], data['doctorId'],
                 data['patientId'], data['arrivalTime'], "Pending" , data['cause'], str(0)
             )
         )
@@ -183,12 +186,13 @@ def get_queue():
                 appointmentId,
                 hospitalId,
                 departmentId,
+                doctorId,
                 patientId,
                 arrivalTime,
                 cause,
                 urgency
             FROM Appointment
-            WHERE hospitalId = ? AND status = 'Approved'
+            WHERE hospitalId = ? AND status = 'Pending'
             ORDER BY
                 DATE(arrivalTime)     ASC,
                 CAST(urgency AS INTEGER) ASC
