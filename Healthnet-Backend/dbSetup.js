@@ -200,11 +200,7 @@ db.run(`
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (roomId) REFERENCES Room(roomId),
-<<<<<<< HEAD
         FOREIGN KEY (patientId) REFERENCES PatientData(patientDataId)
-=======
-        FOREIGN KEY (patientId) REFERENCES Patient(patientId)
->>>>>>> 6ce32373bb874b994e461b7daf2b65e9679e9785
       );
     `, (err) => { if (err) console.error("Error creating Bed table:", err.message); });
 

@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
         );
         // Create bed records based on bedCount.
         for (let i = 0; i < bedCount; i++) {
-            const bedId = uuidv4();
+            const bedId = `${roomName}-BED-${i + 1}`;
             await dbRun(
                 `INSERT INTO Bed (bedId, roomId, status, patientId, createdAt, updatedAt)
            VALUES (?, ?, 'Unoccupied', NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
@@ -193,16 +193,14 @@ router.put('/beds/:bedId/assign', async (req, res) => {
          WHERE bedId = ?`,
             [patientId, bedId]
         );
-<<<<<<< HEAD
-
         // Fetch patient's username using INNER JOIN
-        const assignedPatient = await dbGet(
-  `SELECT p.name 
-   FROM Bed b
-   LEFT JOIN PatientData p ON b.patientId = p.patientDataId
-   WHERE b.bedId = ?`,
-  [bedId]
-);
+                const assignedPatient = await dbGet(
+        `SELECT p.name 
+        FROM Bed b
+        LEFT JOIN PatientData p ON b.patientId = p.patientDataId
+        WHERE b.bedId = ?`,
+        [bedId]
+        );
 
 
         if (!assignedPatient) {
@@ -213,10 +211,6 @@ router.put('/beds/:bedId/assign', async (req, res) => {
             msg: 'Bed assigned successfully', 
             assignedPatient: assignedPatient.name 
         });
-
-=======
-        return res.status(200).json({ msg: 'Bed assigned successfully' });
->>>>>>> 6ce32373bb874b994e461b7daf2b65e9679e9785
     } catch (err) {
         console.error(err);
         return res.status(500).json({ msg: 'Server error', error: err.message });

@@ -200,10 +200,10 @@ const ManageBeds = () => {
 
   const fetchPatients = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/patients');
+      const res = await axios.get('http://localhost:5000/api/patients/all');
       setAllPatients(res.data);
     } catch (err) {
-      console.error('Error fetching patients:', err);
+      console.error('Error fetching patients:', err); 
     }
   };
 
@@ -240,7 +240,7 @@ const ManageBeds = () => {
         if (bed.bedId === bedId && !bed.occupied) {
           const matches = value.length > 0
             ? allPatients.filter(p =>
-                p.username.toLowerCase().includes(value.toLowerCase())
+                p.name.toLowerCase().includes(value.toLowerCase())
               ).slice(0, 5)
             : [];
           return { ...bed, patientName: value, showDropdown: value.length > 0, dropdownMatches: matches };
@@ -317,7 +317,7 @@ const ManageBeds = () => {
                               onClick={() => handleSelectPatient(bed.bedId, match)}
                               className="px-4 py-2 cursor-pointer hover:bg-emerald-100"
                             >
-                              {match.username} ({match.email})
+                              {match.name} ({match.contactInfo})
                             </li>
                           ))}
                         </ul>
