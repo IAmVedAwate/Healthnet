@@ -12,19 +12,21 @@ const DocAppointment = ({ doctorId }) => {
   const [showUrgencyBox, setShowUrgencyBox] = useState(null);
   const { id: hospitalId } = useSelector((state) => state.auth);
 
+  const fetchMyAppointments = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5050/get_queue`, {
+        params: { hospitalId }
+      });
+      const filtered = res.data.filter((apt) => apt.doctorId === doctorId);
+      setAppointments(filtered);
+    } catch (err) {
+      console.error('Error fetching appointments:', err);
+      toast.error('Failed to load appointments');
+    }
+  };
+
   useEffect(() => {
-    const fetchMyAppointments = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5050/get_queue`, {
-          params: { hospitalId }
-        });
-        const filtered = res.data.filter((apt) => apt.doctorId === doctorId);
-        setAppointments(filtered);
-      } catch (err) {
-        console.error('Error fetching appointments:', err);
-        toast.error('Failed to load appointments');
-      }
-    };
+    
 
     fetchMyAppointments();
   }, [doctorId, hospitalId]);
@@ -45,7 +47,8 @@ const DocAppointment = ({ doctorId }) => {
       );
 
       toast.success('Urgency updated successfully');
-      setShowUrgencyBox(null);
+        setShowUrgencyBox(null);
+        fetchMyAppointments();
     } catch (err) {
       console.error('Failed to update urgency:', err);
       toast.error('Error updating urgency');
@@ -55,7 +58,8 @@ const DocAppointment = ({ doctorId }) => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Appointments for Doctor</h2>
-      <table className="w-full table-auto border-collapse">
+      {appointments.length > 0 ?
+        <table className="w-full table-auto border-collapse">
         <thead>
           <tr className="bg-gray-200 text-sm">
             <th className="border px-4 py-2">Patient ID</th>
@@ -118,6 +122,10 @@ const DocAppointment = ({ doctorId }) => {
           ))}
         </tbody>
       </table>
+        :
+        <h1>No Appointments</h1>
+      }
+      
     </div>
   );
 };

@@ -28,7 +28,12 @@ const BookAppointment = () => {
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
+      <div className='flex justify-between'> 
       <h1 className="text-3xl font-bold text-center mb-10 text-teal-600">Select a Hospital</h1>
+        <Link to={"/patients/my-appointments"}>
+        <button className='bg-blue-600 p-2 rounded-2xl text-white hover:scale-110 transition'>My Appointments</button>
+        </Link>
+     </div>
 
       <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       {hospitals.map((hospital) => (

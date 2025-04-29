@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux';
 import BookAppointment from './components/Hospital/patient/BookAppointment';
 import Navigation from './Navigation';
 import DoctorSelect from './components/Hospital/patient/doctorSelect';
+import MyAppointment from './components/Hospital/patient/MyAppointment';
 
 
 
@@ -73,6 +74,7 @@ const RouteManager = () => {
     <>
       <Route path='/patients' element={<Home />} />
             <Route path='/patients/book-appointment' element={<BookAppointment />} />
+            <Route path='/patients/my-appointments' element={<MyAppointment /> } />
             <Route path='/doctor-select/:hospitalId' element={<DoctorSelect />} />
       <Route path="/patient/get" element={<GetAllPatients />} />
       <Route path="/patient/add" element={<AddPatient />} />

@@ -70,13 +70,13 @@ function Navigation() {
               <>
                 <Link
                   to="/signup"
-                  className="text-sm border border-blue-500 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 transition"
+                  className="text-sm border bg-blue-500 text-white px-4 py-1.5 rounded hover:scale-110 transition"
                 >
                   Register
                 </Link>
                 <Link
                   to="/login"
-                  className="text-sm border border-green-500 text-green-600 px-4 py-1.5 rounded hover:bg-green-50 transition"
+                  className="text-sm border bg-green-500 text-white px-4 py-1.5 rounded hover:scale-110 transition"
                 >
                   Login
                 </Link>
@@ -84,7 +84,7 @@ function Navigation() {
             ) : (
               <button
                 onClick={handleLogout}
-                className="text-sm border border-red-500 text-red-600 px-4 py-1.5 rounded hover:bg-red-50 transition"
+                className="text-sm border bg-red-500 text-white px-4 py-1.5 rounded hover:scale-110 transition"
               >
                 Logout
               </button>

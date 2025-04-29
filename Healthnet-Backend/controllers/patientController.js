@@ -155,6 +155,55 @@ const patientProfile = async (req,res) => {
   }
 }
 
+const patientsAppointment = async (req, res) => {
+  try {
+    const { id } = req.query;
+    // console.log(id)
+
+    const appointments = await dbAll(`
+      SELECT 
+        a.appointmentId,
+        a.hospitalId,
+        a.departmentId,
+        a.doctorId,
+        a.patientId,
+        a.arrivalTime,
+        a.cause,
+        a.urgency,
+        a.status,
+        a.createdAt,
+        d.firstName AS doctorFirstName,
+        d.lastName AS doctorLastName,
+        d.specialization,
+        d.email AS doctorEmail,
+        d.phoneNumber AS doctorPhone
+      FROM Appointment a
+      JOIN Doctor d ON a.doctorId = d.doctorId
+      WHERE a.patientId = ?
+    `, [id]);
+
+    if (!appointments || appointments.length === 0) {
+      return res.status(200).json({ message: "No Appointments" });
+    }
+
+    // Format createdAt to date and day
+    const formatted = appointments.map(app => ({
+      ...app,
+      appointmentDate: new Date(app.createdAt).toLocaleDateString('en-IN', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error("Error fetching patient appointments:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   addPatient,
   getAllPatients,
@@ -162,5 +211,6 @@ module.exports = {
   deletePatient,
   updatePatient,
   getAllPatientsForBill,
-  patientProfile
+  patientProfile,
+  patientsAppointment
 };

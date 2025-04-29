@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router';
+import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AppointmentModal from './AppointmentModal'; // Import modal component
 
@@ -11,6 +11,7 @@ const DoctorSelect = () => {
   const [slotsByDoctor, setSlotsByDoctor] = useState({});
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const { hospitalId } = useParams();
+  const navigate = useNavigate();
   
 
   useEffect(() => {
@@ -51,8 +52,18 @@ const DoctorSelect = () => {
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
-      <ToastContainer />
-      <h1 className="text-2xl font-bold text-center mb-8 text-teal-600">Select a Doctor & Book an Appointment</h1>
+      
+      <div className='flex justify-between'>
+        <h1 className="text-2xl font-bold text-center mb-8 text-teal-600">Select a Doctor & Book an Appointment</h1>
+        <div>
+                  <button
+      onClick={() => navigate(-1)}
+      className="bg-blue-600 p-2 rounded-2xl text-white hover:scale-110 transition"
+    >
+      Back
+    </button>
+                  </div>
+      </div>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {doctors.length > 0 ? (

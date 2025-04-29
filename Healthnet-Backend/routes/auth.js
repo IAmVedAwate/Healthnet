@@ -397,7 +397,7 @@ router.post('/login', async (req, res) => {
       jwt.sign(
         payload,
         process.env.TOKEN,
-        { expiresIn: '1h' },
+        { expiresIn: '24h' },
         (err, token) => {
           if (err) throw err;
           res.setHeader('access-token', token);
