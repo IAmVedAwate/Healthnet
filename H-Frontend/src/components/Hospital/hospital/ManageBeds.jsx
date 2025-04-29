@@ -189,18 +189,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
 
 const ManageBeds = () => {
   const { roomName, roomId } = useParams();
   const effectiveRoomName = roomName || 'IC_A1';
 
+  const { id} = useSelector((state) => state.auth)
   const [allPatients, setAllPatients] = useState([]);
   const [beds, setBeds] = useState([]);
   const [message, setMessage] = useState(null);
 
   const fetchPatients = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/patients/all');
+      const res = await axios.get('http://localhost:5000/api/patients/all', {
+        params: {
+          hospitalId:id
+        }
+      });
       setAllPatients(res.data);
     } catch (err) {
       console.error('Error fetching patients:', err); 

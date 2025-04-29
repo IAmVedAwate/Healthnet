@@ -93,6 +93,9 @@ const GetAllPatients = () => {
   const fetchPatients = useCallback(() => {
     axios
       .get("http://localhost:5000/api/patients/all", {
+        params: {
+          hospitalId:id
+        },
         headers: {
           "access-token": token,
         },
@@ -117,7 +120,7 @@ const GetAllPatients = () => {
 
   useEffect(() => {
     fetchPatients();
-  }, [fetchPatients]);
+  }, []);
 
   return (
     <div className="container mx-auto p-4">

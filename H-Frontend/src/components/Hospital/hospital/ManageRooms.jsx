@@ -22,7 +22,11 @@ const ManageRooms = () => {
 
   const fetchRooms = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/rooms');
+      const res = await axios.get('http://localhost:5000/api/rooms', {
+        params: {
+          hospitalId:id
+        }
+      });
       setRooms(res.data);
     } catch (err) {
       setMessage(err.response?.data?.msg || 'Error fetching rooms');

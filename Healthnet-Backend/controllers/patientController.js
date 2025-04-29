@@ -61,7 +61,9 @@ const getAllPatientsForBill = async (req, res) => {
 // GET /api/patients
 const getAllPatients = async (req, res) => {
   try {
-    const patients = await dbAll("SELECT * FROM PatientData");
+    const { hospitalId } = req.query;
+    //console.log(hospitalId)
+    const patients = await dbAll("SELECT * FROM PatientData WHERE hospitalId =? " ,[hospitalId]);
     res.status(200).json(patients);
   } catch (error) {
     console.error(error.message);
