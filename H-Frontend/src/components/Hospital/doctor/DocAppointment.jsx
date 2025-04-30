@@ -4,7 +4,16 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const urgencyOptions = ['0', '1', '2', '3', '4', '5'];
+
+const priorityLabels = {
+  0: "Critical/Emergency",
+  1: "High Priority",
+  2: "Moderate Priority",
+  3: "Low Priority"
+};
+
+const urgencyOptions = Object.entries(priorityLabels); // [["0", "Critical/Emergency"], ...]
+
 
 const DocAppointment = ({ doctorId }) => {
   const [appointments, setAppointments] = useState([]);
@@ -90,11 +99,12 @@ const DocAppointment = ({ doctorId }) => {
                       className="border rounded px-2 py-1"
                     >
                       <option value="" disabled>Select</option>
-                      {urgencyOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
+                      {urgencyOptions.map(([value, label]) => (
+  <option key={value} value={value}>
+    {label}
+  </option>
+))}
+
                     </select>
                     <button
                       onClick={() => handleUrgencyChange(apt.appointmentId)}
