@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
-DATABASE = r'D:\Study\Sem8\Mega Project - 11-04-25\Healthnet-main\Healthnet-Backend\HealthNet.db'
+DATABASE = r'D:\Healthnet\Healthnet-Backend\HealthNet.db'
 
 
 # ---------------------
@@ -138,7 +138,7 @@ def api_enqueue_case():
     (appointmentId is auto-generated as a UUID)
     """
     data = request.get_json()
-    required = ["hospitalId", "departmentId", "patientId", "arrivalTime", "cause"]
+    required = ["hospitalId", "departmentId", "patientId","patientAssignId", "arrivalTime", "cause"]
     if not all(field in data for field in required):
         return jsonify({"error": "Missing one or more required fields"}), 400
 
@@ -149,12 +149,12 @@ def api_enqueue_case():
         db.execute(
             """
             INSERT INTO Appointment
-            (appointmentId, hospitalId, departmentId, doctorId, patientId, arrivalTime, status, cause, urgency)
-            VALUES (?, ?, ?, ?, ?,?, ?, ?, ?)
+            (appointmentId, hospitalId, departmentId, doctorId, patientId, patientAssignId, arrivalTime, status, cause, urgency)
+            VALUES (?, ?, ?, ?, ?,?, ?, ?, ?, ?)
             """,
             (
                 appointment_id, data['hospitalId'], data['departmentId'], data['doctorId'],
-                data['patientId'], data['arrivalTime'], "Pending" , data['cause'], str(0)
+                data['patientId'], data['patientAssignId'], data['arrivalTime'], "Pending" , data['cause'], str(0)
             )
         )
         db.commit()
@@ -192,6 +192,49 @@ def get_queue():
                 cause,
                 urgency
             FROM Appointment
+            WHERE hospitalId = ? AND status = 'Approved'
+            ORDER BY
+                DATE(arrivalTime)     ASC,
+                CAST(urgency AS INTEGER) ASC
+            """,
+            (hospital_id,)
+        )
+        rows = cursor.fetchall()
+        data = [dict(r) for r in rows]
+        return jsonify(data), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/get_pending_queue', methods=['GET'])
+def get_pending_queue():
+    """
+    Fetch pending appointments for a specific hospital, ordered by:
+      1) arrivalTime (ascending)
+      2) urgency (ascending) for ties on arrivalTime.
+
+    Expects query parameter:
+      - hospitalId: UUID of the hospital
+    """
+    hospital_id = request.args.get('hospitalId')
+    if not hospital_id:
+        return jsonify({"error": "Query parameter 'hospitalId' is required."}), 400
+
+    db = get_db()
+    try:
+        cursor = db.execute(
+            """
+            SELECT
+                appointmentId,
+                hospitalId,
+                departmentId,
+                doctorId,
+                patientId,
+                patientAssignId,
+                arrivalTime,
+                cause,
+                urgency
+            FROM Appointment
             WHERE hospitalId = ? AND status = 'Pending'
             ORDER BY
                 DATE(arrivalTime)     ASC,
@@ -206,8 +249,8 @@ def get_queue():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/schedule_next', methods=['POST'])
-def schedule_next():
+@app.route('/schedule_next/<hospitalId>', methods=['POST'])
+def schedule_next(hospitalId):
     """
     Schedule the highest-priority appointment and remove it from DB.
     """
@@ -215,8 +258,8 @@ def schedule_next():
     try:
         # Fetch next appointment
         row = db.execute(
-            "SELECT * FROM Appointment WHERE status = 'Approved'"
-            " ORDER BY CAST(urgency AS INTEGER) ASC, arrivalTime ASC LIMIT 1"
+            """SELECT * FROM Appointment WHERE hospitalId = ? AND  status = 'Approved'
+            ORDER BY DATE(arrivalTime)     ASC, CAST(urgency AS INTEGER) ASC, arrivalTime ASC LIMIT 1""",(hospitalId,)
         ).fetchone()
         if not row:
             return jsonify({"message": "No appointments pending."}), 200

@@ -1,26 +1,26 @@
 import sqlite3
 
 # Connect to the HealthNet database
-conn = sqlite3.connect('HealthNet.db')
+conn = sqlite3.connect('D:\Healthnet\Healthnet-Backend\HealthNet.db')
 cursor = conn.cursor()
 
 try:
-    cursor.execute("SELECT slotId, startTime FROM DoctorSlot WHERE isActive = 1")
+    cursor.execute("ALTER TABLE Appointment ADD COLUMN patientAssignId TEXT;")
     slots = cursor.fetchall()
 
-    # Step 2: Cleanly update each slot with ISO formatted time
-    for slotId, startTime in slots:
-        print(startTime)
-        try:
+    # # Step 2: Cleanly update each slot with ISO formatted time
+    # for slotId, startTime in slots:
+    #     print(startTime)
+    #     try:
 
-            # Update nextAvailableTime
-            cursor.execute(
-                "UPDATE DoctorSlot SET nextAvailableTime = ? WHERE slotId = ?",
-                (startTime, slotId)
-            )
+    #         # Update nextAvailableTime
+    #         cursor.execute(
+    #             "UPDATE DoctorSlot SET nextAvailableTime = ? WHERE slotId = ?",
+    #             (startTime, slotId)
+    #         )
 
-        except Exception as e:
-            print(f"[Error] Slot {slotId} has invalid startTime '{startTime}': {e}")
+    #     except Exception as e:
+    #         print(f"[Error] Slot {slotId} has invalid startTime '{startTime}': {e}")
     conn.commit()
     conn.close()
     print("[✔] nextAvailableTime initialized for all active slots.")

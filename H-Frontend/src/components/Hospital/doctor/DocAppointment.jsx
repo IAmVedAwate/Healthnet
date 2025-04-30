@@ -14,7 +14,7 @@ const DocAppointment = ({ doctorId }) => {
 
   const fetchMyAppointments = async () => {
     try {
-      const res = await axios.get(`http://localhost:5050/get_queue`, {
+      const res = await axios.get(`http://localhost:5050/get_pending_queue`, {
         params: { hospitalId }
       });
       const filtered = res.data.filter((apt) => apt.doctorId === doctorId);
@@ -33,11 +33,13 @@ const DocAppointment = ({ doctorId }) => {
 
   const handleUrgencyChange = async (appointmentId) => {
     try {
+      // 1) Update urgency (and implicitly approve)
       await axios.post(`http://localhost:5000/api/doctors/urgency`, {
         appointmentId,
         urgency: selectedUrgency[appointmentId],
       });
-
+  
+      // 2) Update local state
       setAppointments((prev) =>
         prev.map((apt) =>
           apt.appointmentId === appointmentId
@@ -45,15 +47,40 @@ const DocAppointment = ({ doctorId }) => {
             : apt
         )
       );
-
-      toast.success('Urgency updated successfully');
-        setShowUrgencyBox(null);
-        fetchMyAppointments();
+  
+      // 3) Find the appointment object to get its patientId
+      const approvedApt = appointments.find(
+        (apt) => apt.appointmentId === appointmentId
+      );
+      const patientId = approvedApt.patientAssignId;
+  
+      // 4) Check bed availability
+      const roomsRes = await axios.get(
+        `http://localhost:5000/api/rooms?hospitalId=${hospitalId}`
+      );
+      const freeRoom = roomsRes.data.find((r) => r.unoccupiedBeds > 0);
+  
+      if (!freeRoom) {
+        toast.warn('No beds available in this hospital');
+      } else {
+        // 5) Assign bed
+        await axios.put(
+          `http://localhost:5000/api/rooms/beds/${freeRoom.availableBedId}/assign`,
+          { patientId },
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        toast.success('Urgency updated and bed assigned successfully');
+      }
+  
+      // 6) Hide the dropdown and refresh list
+      setShowUrgencyBox(null);
+      fetchMyAppointments();
     } catch (err) {
-      console.error('Failed to update urgency:', err);
-      toast.error('Error updating urgency');
+      console.error('Error in urgency/bed flow:', err);
+      toast.error('Failed to update urgency or assign bed');
     }
   };
+  
 
   return (
     <div className="p-4">

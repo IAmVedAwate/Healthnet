@@ -79,7 +79,8 @@ router.get('/', async (req, res) => {
         const { hospitalId } = req.query;
         const rooms = await dbAll(`
       SELECT r.*, 
-        (SELECT COUNT(*) FROM Bed b WHERE b.roomId = r.roomId AND b.status = 'Unoccupied') AS unoccupiedBeds
+        (SELECT COUNT(*) FROM Bed b WHERE b.roomId = r.roomId AND b.status = 'Unoccupied') AS unoccupiedBeds,
+        (SELECT bedId FROM Bed b WHERE b.roomId = r.roomId AND b.status = 'Unoccupied') AS availableBedId
       FROM Room r WHERE hospitalId = ? 
     `,[hospitalId]);
         return res.status(200).json(rooms);
