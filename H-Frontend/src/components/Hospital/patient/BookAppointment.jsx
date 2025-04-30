@@ -22,9 +22,6 @@ const BookAppointment = () => {
     fetchHospitals();
   }, [token]);
 
-  const handleSelectHospital = (hospitalId) => {
-    navigate(`/doctor-select/${hospitalId}`);  // Dummy path
-  };
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
