@@ -91,7 +91,22 @@ function createTables() {
       );
   `, (err) => {
   if (err) console.error("Error creating PatientData table:", err.message);
+    });
+    
+    db.run(`
+  CREATE TABLE IF NOT EXISTS MedicalHistory (
+    historyId TEXT PRIMARY KEY,
+    patientId TEXT NOT NULL,
+    fileName TEXT NOT NULL,
+    fileType TEXT NOT NULL,
+    filePath TEXT NOT NULL,
+    uploadedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (patientId) REFERENCES Patient(patientId)
+  );
+`, (err) => {
+  if (err) console.error("Error creating MedicalHistory table:", err.message);
 });
+
 
 
     // IManager table: Inventory Manager, belongs to a Hospital

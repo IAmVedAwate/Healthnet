@@ -2,6 +2,8 @@
 const { promisify } = require('util');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../dbSetup');
+const path = require('path');
+
 
 const dbRun = promisify(db.run).bind(db);
 const dbGet = promisify(db.get).bind(db);
@@ -206,6 +208,48 @@ const patientsAppointment = async (req, res) => {
   }
 };
 
+const uploadMedicalHistory = async (req, res) => {
+  try {
+    const { patientId } = req.body;
+    const file = req.file;
+
+    if (!file) return res.status(400).json({ error: "No file uploaded" });
+
+    const historyId = uuidv4();
+    const fileName = file.filename;
+    const filePath = path.join('uploads/history/', fileName);
+    const fileType = file.mimetype;
+
+    await dbRun(`
+      INSERT INTO MedicalHistory (historyId, patientId, fileName, fileType, filePath)
+      VALUES (?, ?, ?, ?, ?)
+    `, [historyId, patientId, fileName, fileType, filePath]);
+
+    res.status(200).json({ message: "Medical history uploaded successfully", filePath });
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getMedicalHistoryByPatient = async (req, res) => {
+  try {
+    const { patientId } = req.query;
+
+    const history = await dbAll(`
+      SELECT fileName, fileType, filePath, uploadedAt 
+      FROM MedicalHistory
+      WHERE patientId = ?
+      ORDER BY uploadedAt DESC
+    `, [patientId]);
+
+    res.status(200).json(history);
+  } catch (error) {
+    console.error("Fetch history error:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   addPatient,
   getAllPatients,
@@ -214,5 +258,7 @@ module.exports = {
   updatePatient,
   getAllPatientsForBill,
   patientProfile,
-  patientsAppointment
+  patientsAppointment,
+  uploadMedicalHistory,
+  getMedicalHistoryByPatient
 };
