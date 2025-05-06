@@ -109,20 +109,20 @@ function createTables() {
 
 
 
-    // IManager table: Inventory Manager, belongs to a Hospital
-    db.run(`
-      CREATE TABLE IF NOT EXISTS IManager (
-        imanagerId TEXT PRIMARY KEY,
-        hospitalId TEXT,
-        firstName TEXT NOT NULL,
-        lastName TEXT NOT NULL,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId)
-      );
-    `, (err) => { if (err) console.error("Error creating IManager table:", err.message); });
+    // // IManager table: Inventory Manager, belongs to a Hospital
+    // db.run(`
+    //   CREATE TABLE IF NOT EXISTS IManager (
+    //     imanagerId TEXT PRIMARY KEY,
+    //     hospitalId TEXT,
+    //     firstName TEXT NOT NULL,
+    //     lastName TEXT NOT NULL,
+    //     email TEXT UNIQUE NOT NULL,
+    //     password TEXT NOT NULL,
+    //     createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    //     updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    //     FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId)
+    //   );
+    // `, (err) => { if (err) console.error("Error creating IManager table:", err.message); });
 
     // Department table: belongs to a Hospital
     db.run(`
@@ -230,7 +230,7 @@ db.run(`
         itemType TEXT,
         quantity INTEGER DEFAULT 0,
         supplier TEXT,
-        receivedDate DATE,
+        expiryDate DATE,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (hospitalId) REFERENCES Hospital(hospitalId)

@@ -2,7 +2,7 @@ import React from 'react';
 
 const DeleteConfirmation = ({ itemName, onConfirm, onCancel }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-75">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/75">
       <div className="bg-white w-96 rounded-lg shadow-xl p-6 relative">
         <button
           onClick={onCancel}

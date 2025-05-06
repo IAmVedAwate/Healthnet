@@ -3,7 +3,10 @@ import axios from 'axios';
 const BASE = 'http://localhost:5000/api/inventory';
 
 const fetchInventory = (hospitalId) =>
-  axios.get(BASE, { data: { hospital: hospitalId } });
+  axios.get(BASE, {
+    params: {
+      hospital: hospitalId
+  } });
 
 const addInventory = (data) =>
   axios.post(`${BASE}/add`, data);

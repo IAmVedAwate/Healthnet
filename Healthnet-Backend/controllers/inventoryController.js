@@ -16,9 +16,10 @@ const dbAll = promisify(db.all).bind(db);
  */
 const getAllInventoryItems = async (req, res) => {
   try {
-    const { hospital } = req.body;
+   
+    const { hospital } = req.query;
     if (!hospital) {
-      return res.status(400).json({ message: "hospital is required" });
+      return res.status(400).json({ message: "hospitalid is required" });
     }
     const query = "SELECT * FROM Inventory WHERE hospitalId = ?";
     const inventory = await dbAll(query, [hospital]);
@@ -31,14 +32,14 @@ const getAllInventoryItems = async (req, res) => {
 /**
  * 2. Add a New Medicine.
  *    Expects: { name, quantity, expiryDate, hospital, imanager }
- *    Note: We map 'name' to itemName, 'expiryDate' to receivedDate.
+ *    Note: We map 'name' to itemName, 'expiryDate' to expiryDate.
  */
 const addMedicine = async (req, res) => {
   try {
-    const { name, quantity, expiryDate, hospital, imanager, itemType, supplier } = req.body;
+    const { name, quantity, expiryDate, hospital, itemType, supplier } = req.body;
     
-    if (!name || !quantity || !expiryDate || !hospital || !imanager) {
-      return res.status(400).json({ message: "name, quantity, expiryDate, hospital, and imanager are required" });
+    if (!name || !quantity || !expiryDate || !hospital ) {
+      return res.status(400).json({ message: "name, quantity, expiryDate, hospital are required" });
     }
 
     
@@ -47,21 +48,20 @@ const addMedicine = async (req, res) => {
     const inventoryId = uuidv4();
     const query = `
       INSERT INTO Inventory 
-        (inventoryId, hospitalId, imanagerId, itemName, itemType, quantity, supplier, receivedDate, createdAt, updatedAt)
+        (inventoryId, hospitalId, itemName, itemType, quantity, supplier, expiryDate, createdAt, updatedAt)
       VALUES 
-        (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
     `;
     await dbRun(query, [
       inventoryId,
       hospital,
-      imanager,
       name,
       itemType || null,
       quantity,
       supplier || null,
       expiryDate
     ]);
-    console.log(error)
+    
     
     // Fetch the newly created record.
     const newMedicine = await dbGet("SELECT * FROM Inventory WHERE inventoryId = ?", [inventoryId]);
@@ -131,7 +131,7 @@ const updateMedicine = async (req, res) => {
       UPDATE Inventory
       SET itemName = COALESCE(?, itemName),
           quantity = COALESCE(?, quantity),
-          receivedDate = COALESCE(?, receivedDate),
+          expiryDate = COALESCE(?, expiryDate),
           itemType = COALESCE(?, itemType),
           supplier = COALESCE(?, supplier),
           updatedAt = CURRENT_TIMESTAMP

@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { inventorySchema } from './validationSchema';
 
 const InventoryForm = ({ initialValues, isEditMode, onSubmit, onClose }) => {
+  console.log(initialValues)
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
@@ -18,11 +19,11 @@ const InventoryForm = ({ initialValues, isEditMode, onSubmit, onClose }) => {
         >
           {({ isSubmitting }) => (
             <Form className="space-y-4">
-              {/* Name */}
+              {/* Item Name */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                <Field name="name" type="text" className="input" />
-                <ErrorMessage name="name" component="div" className="text-red-500 text-xs mt-1" />
+                <label htmlFor="itemName" className="block text-sm font-medium text-gray-700">Item Name</label>
+                <Field name="itemName" type="text" className="input" />
+                <ErrorMessage name="itemName" component="div" className="text-red-500 text-xs mt-1" />
               </div>
 
               {/* Quantity */}

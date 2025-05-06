@@ -3,8 +3,9 @@ import InventoryList from './InventoryList';
 import InventoryForm from './InventoryForm';
 import InventoryDetailsModal from './InventoryDetailsModal';
 import DeleteConfirmation from './DeleteConfirmation';
-import { fetchInventory, addInventory, updateInventory, deleteInventory, getInventoryById } from './inventoryAPI';
+import { fetchInventory, addInventory, updateInventory, deleteInventory } from './inventoryAPI';
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const InventoryDashboard = () => {
   const [inventory, setInventory] = useState([]);
@@ -44,27 +45,38 @@ const InventoryDashboard = () => {
     setIsEditMode(true);
     setShowForm(true);
   };
-
   const handleSubmit = async (values, { resetForm }) => {
     try {
       if (isEditMode) {
+        // Updating the inventory item
         await updateInventory(selectedItem.inventoryId, values);
+        toast.success("Inventory item updated successfully");
       } else {
-        await addInventory({ ...values, hospital: id, imanager: 'M001' }); // Replace with actual manager ID
+        // Adding a new inventory item
+        await addInventory({ ...values, hospital: id });
+        toast.success("Inventory item added successfully");
       }
+  
+      // Reload inventory after submit
       await loadInventory();
+      
+      // Reset form fields and close the form modal
       resetForm();
       setShowForm(false);
+  
     } catch (err) {
       console.error('Error submitting form:', err.message);
+      toast.error("An error occurred while submitting the form. Please try again.");
     }
   };
+  
 
   const handleDelete = async () => {
     try {
       await deleteInventory(deleteItemId);
       await loadInventory();
       setDeleteItemId(null);
+      toast.success("Removed successfully")
     } catch (err) {
       console.error('Error deleting item:', err.message);
     }
@@ -83,24 +95,29 @@ const InventoryDashboard = () => {
       </div>
 
       {loading ? (
-        <p className="text-gray-500">Loading inventory...</p>
-      ) : (
-        <InventoryList
-          items={inventory}
-          onEdit={handleEdit}
-          onView={(item) => {
-            setSelectedItem(item);
-            setShowDetails(true);
-          }}
-          onDelete={(id) => setDeleteItemId(id)}
-        />
-      )}
+  <p className="text-gray-500">Loading inventory...</p>
+) : inventory.length === 0 ? (
+  <div className="text-center text-gray-500 mt-10">
+    <p className="text-lg">No inventory items found.</p>
+    <p className="text-sm mt-1">Click “+ Add Item” to create a new one.</p>
+  </div>
+) : (
+  <InventoryList
+    items={inventory}
+    onEdit={handleEdit}
+    onView={(item) => {
+      setSelectedItem(item);
+      setShowDetails(true);
+    }}
+    onDelete={(id) => setDeleteItemId(id)}
+  />
+)}
 
       {showForm && (
         <InventoryForm
           initialValues={
             selectedItem || {
-              name: '',
+              itemName: '',
               quantity: '',
               expiryDate: '',
               itemType: '',

@@ -5,7 +5,7 @@ conn = sqlite3.connect('HealthNet.db')
 cursor = conn.cursor()
 
 try:
-    cursor.execute("DELETE FROM MedicalHistory WHERE historyId = 'c73ac87f-af31-46ec-9d28-b1cd5813cc93';")
+    cursor.execute("DROP TABLE IF EXISTS Imanager;")
     print("Appointment table dropped successfully.")
 
 except Exception as e:

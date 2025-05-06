@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 export const inventorySchema = Yup.object({
-  name: Yup.string()
+  itemName: Yup.string()
     .required('Name is required')
     .min(3, 'Name must be at least 3 characters long'),
   
