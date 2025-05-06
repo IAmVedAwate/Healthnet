@@ -36,9 +36,9 @@ const getAllInventoryItems = async (req, res) => {
  */
 const addMedicine = async (req, res) => {
   try {
-    const { name, quantity, expiryDate, hospital, itemType, supplier } = req.body;
+    const { itemName, quantity, expiryDate, hospital, itemType, supplier } = req.body;
     
-    if (!name || !quantity || !expiryDate || !hospital ) {
+    if (!itemName || !quantity || !expiryDate || !hospital ) {
       return res.status(400).json({ message: "name, quantity, expiryDate, hospital are required" });
     }
 
@@ -55,7 +55,7 @@ const addMedicine = async (req, res) => {
     await dbRun(query, [
       inventoryId,
       hospital,
-      name,
+      itemName,
       itemType || null,
       quantity,
       supplier || null,
