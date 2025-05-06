@@ -62,15 +62,44 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
   }), []);
 
   const validationSchema = Yup.object({
-    issue: Yup.string().required('Please describe the issue'),
-    selectedSlot: Yup.string().required('Select a slot'),
-    appointmentDateTime: Yup.date().required('Select appointment time'),
-    name: Yup.string().required('Enter patient name'),
-    age: Yup.number().required('Enter patient age'),
-    gender: Yup.string().required('Enter patient gender'),
-    contactInfo: Yup.string().required('Enter contact info'),
+    name: Yup.string()
+      .trim()
+      .min(2, 'Name must be at least 2 characters')
+      .max(50, 'Name can be at most 50 characters')
+      .required('Patient name is required'),
+  
+    age: Yup.number()
+      .typeError('Age must be a number')
+      .integer('Age must be a whole number')
+      .min(0, 'Age cannot be negative')
+      .max(130, 'Please enter a realistic age')
+      .required('Patient age is required'),
+  
+    gender: Yup.string()
+      .oneOf(['male', 'female', 'other'], 'Invalid gender selection')
+      .required('Patient gender is required'),
+  
+    contactInfo: Yup.string()
+      .matches(
+        /^[0-9]{10}$/,
+        'Contact number must be a valid 10-digit Indian phone number'
+      )
+      .required('Contact number is required'),
+  
+    issue: Yup.string()
+      .trim()
+      .min(5, 'Issue description must be at least 5 characters')
+      .max(300, 'Issue description can’t exceed 300 characters')
+      .required('Please describe the issue'),
+  
+    selectedSlot: Yup.string()
+      .required('Please select a time slot'),
+  
+    appointmentDateTime: Yup.date()
+      .typeError('Invalid appointment date/time')
+      .min(new Date(), 'Appointment time must be in the future')
+      .required('Appointment date and time is required'),
   });
-
   const getSelectedSlot = (slotId) =>
     slots.find((s) => s.slotId === slotId) || null;
 
@@ -138,7 +167,7 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center overflow-y-auto px-4 py-8"
+      className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center overflow-y-auto px-4 py-8"
       role="dialog"
       aria-modal="true"
     >
@@ -175,11 +204,7 @@ const AppointmentModal = ({ doctor, slots, onClose }) => {
 
                 return (
                   <Form className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <TextField label="Name" value={patient.username} fullWidth disabled />
-                      <TextField label="Email" value={patient.email} fullWidth disabled />
-                      <TextField label="Phone" value={patient.phoneNumber} fullWidth disabled />
-                    </div>
+                   
 
                     <Field
                       name="issue"
