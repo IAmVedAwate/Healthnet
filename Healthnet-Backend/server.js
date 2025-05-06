@@ -63,6 +63,7 @@ const corsOptions = {
   credentials: true,
 };
 
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
@@ -86,6 +87,9 @@ app.use('/api/doctor', doctorSlotRoutes);
 
 const queueRoutes = require('./routes/queueRoutes');
 app.use('/api/queues', queueRoutes);
+
+const path = require('path');
+app.use('/uploads/history', express.static(path.join(__dirname, 'uploads/history')))
 
 const server = http.createServer(app);
 const io = new Server(server);

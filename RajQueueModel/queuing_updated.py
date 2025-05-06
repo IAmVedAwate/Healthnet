@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
-DATABASE = r'D:\Healthnet\Healthnet-Backend\HealthNet.db'
+DATABASE = r'D:\Mega healthnet project\Healthnet-Backend\HealthNet.db'
 
 
 # ---------------------
