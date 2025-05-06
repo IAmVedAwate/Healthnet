@@ -47,9 +47,12 @@ const BookAppointment = () => {
           Contact: <span className="font-medium">{hospital.hospitalContactInfo}</span>
         </p>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 space-x-2">
         <span className="inline-block bg-teal-100 text-teal-800 text-xs font-semibold rounded-full px-3 py-1">
           People in Queue: {hospital.peopleInQueue}
+              </span>
+              <span className="inline-block bg-yellow-100 text-teal-800 text-xs font-semibold rounded-full px-3 py-1">
+              Available Beds: {hospital.availableBeds}
         </span>
       </div>
     </div>

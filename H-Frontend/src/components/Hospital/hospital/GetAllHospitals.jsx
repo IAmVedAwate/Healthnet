@@ -53,6 +53,7 @@ const GetAllHospitals = () => {
               <div className="col-md-4">
                 People In Queue: <i>{hospital.peopleInQueue}</i>
               </div>
+              
               <div className="col-md-4 text-end">
                 <button
                   className="btn btn-primary"
