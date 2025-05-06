@@ -1,6 +1,7 @@
 // server.js
 require('dotenv').config();
 const express = require('express');
+const path = require('path')
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -67,6 +68,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
@@ -88,8 +90,11 @@ app.use('/api/doctor', doctorSlotRoutes);
 const queueRoutes = require('./routes/queueRoutes');
 app.use('/api/queues', queueRoutes);
 
-const path = require('path');
+
 app.use('/uploads/history', express.static(path.join(__dirname, 'uploads/history')))
+
+const inventoryRoutes = require('./routes/inventoryRoutes');
+app.use('/api/inventory' , inventoryRoutes)
 
 const server = http.createServer(app);
 const io = new Server(server);

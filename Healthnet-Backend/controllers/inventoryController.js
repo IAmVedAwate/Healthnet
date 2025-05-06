@@ -3,6 +3,7 @@
 const { promisify } = require('util');
 const { v4: uuidv4 } = require('uuid');
 const db = require('../dbSetup');
+const { error } = require('console');
 
 // Promisify SQLite methods.
 const dbRun = promisify(db.run).bind(db);
@@ -39,7 +40,10 @@ const addMedicine = async (req, res) => {
     if (!name || !quantity || !expiryDate || !hospital || !imanager) {
       return res.status(400).json({ message: "name, quantity, expiryDate, hospital, and imanager are required" });
     }
+
     
+    
+
     const inventoryId = uuidv4();
     const query = `
       INSERT INTO Inventory 
@@ -57,6 +61,7 @@ const addMedicine = async (req, res) => {
       supplier || null,
       expiryDate
     ]);
+    console.log(error)
     
     // Fetch the newly created record.
     const newMedicine = await dbGet("SELECT * FROM Inventory WHERE inventoryId = ?", [inventoryId]);

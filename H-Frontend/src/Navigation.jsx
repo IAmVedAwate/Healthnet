@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router';
 import { logout } from './store/authSlice';
 import { toast } from "react-toastify";
-
+import Profile from "./components/profile/Profile";
+import { Search, User } from "lucide-react";
 
 const NavItem = ({ to, children, activeColor = "yellow-400", hoverColor = "white" }) => {
   return (
@@ -26,8 +27,12 @@ const NavItem = ({ to, children, activeColor = "yellow-400", hoverColor = "white
 function Navigation() {
 
   const { token, role } = useSelector((state) => state.auth);
+  const isLoggedIn = !!role; // Ensure it's a boolean
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [showProfile, setShowProfile] = useState(false);
+  
+  const toggleProfile = () => setShowProfile(!showProfile);
 
   const handleLogout = () => {
     
@@ -82,14 +87,20 @@ function Navigation() {
                 </Link>
               </>
             ) : (
-              <button
+                <>
+                <button
                 onClick={handleLogout}
                 className="text-sm border bg-red-500 text-white px-4 py-1.5 rounded hover:scale-110 transition"
               >
                 Logout
-              </button>
+                </button>
+                <button onClick={toggleProfile} className="flex items-center font-medium focus:outline-none">
+                <User className="ml-4" size={20} />
+              </button></>
+                
             )}
           </div>
+          {isLoggedIn && <Profile show={showProfile} toggle={toggleProfile} />}
         </div>
       </div>
     </div>

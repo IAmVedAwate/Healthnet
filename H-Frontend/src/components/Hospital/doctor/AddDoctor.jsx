@@ -277,7 +277,7 @@ const AddDoctor = () => {
   ];
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-md p-6">
+    <div className="max-w-4xl mx-auto mt-10  bg-white rounded-lg shadow-md p-6">
       <h1 className="text-2xl font-semibold mb-6 text-green-600">Add Doctor Details</h1>
 
       <form onSubmit={formik.handleSubmit} className="space-y-5">

@@ -1,197 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import { useNavigate } from 'react-router';
-
-// const Signup = () => {
-//   const navigate = useNavigate();
-//   // Determine signup type based on Admin token in localStorage.
-//   // If an Admin is logged in, signup will be for Hospital; otherwise, it's for Patient.
-//   const [signupType, setSignupType] = useState('patient');
-
-//   useEffect(() => {
-//     const storedRole = localStorage.getItem('role');
-//     if (storedRole && storedRole === 'Admin') {
-//       setSignupType('hospital');
-//     } else {
-//       setSignupType('patient');
-//     }
-//   }, []);
-
-//   // For Patient, the name field acts as username.
-//   // For Hospital, it's the hospital name.
-//   const [formData, setFormData] = useState({
-//     name: '',
-//     email: '',
-//     phoneNumber: '',
-//     address: '',
-//     password: '',
-//     confirmPassword: '',
-//   });
-//   const [message, setMessage] = useState(null);
-//   const [token, setToken] = useState(null);
-//   const [termsChecked, setTermsChecked] = useState(false);
-
-//   // Update form field values
-//   const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-//   const toggleTerms = () => setTermsChecked(!termsChecked);
-
-//   // Handle form submission
-//   const onSubmit = async (e) => {
-//     e.preventDefault();
-//     setMessage(null);
-
-//     if (formData.password !== formData.confirmPassword) {
-//       setMessage('Passwords do not match');
-//       return;
-//     }
-//     if (!termsChecked) {
-//       setMessage('You must agree to the Terms and Conditions');
-//       return;
-//     }
-
-//     try {
-//       // Determine endpoint based on signupType
-//       const endpoint =
-//         signupType === 'patient'
-//           ? 'http://localhost:5000/api/auth/patient/signup'
-//           : 'http://localhost:5000/api/auth/hospital/signup';
-
-//       // Build payload:
-//       // For Patient, send username field; for Hospital, send name field.
-//       const payload =
-//         signupType === 'patient'
-//           ? { username: formData.name, address: formData.address, phoneNumber: formData.phoneNumber,  email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword }
-//           : { name: formData.name, address: formData.address, phoneNumber: formData.phoneNumber, email: formData.email, password: formData.password, confirmPassword: formData.confirmPassword };
-
-//       const res = await axios.post(endpoint, payload);
-//       setMessage(res.data.msg);
-//       setToken(res.data.token);
-//       alert(res.data.msg);
-//       localStorage.setItem('token', res.data.token);
-//       localStorage.setItem('role', res.data.role);
-//       console.log(res.data)
-//       res.data.role == "Patient" ? localStorage.setItem('patientId', res.data.id): localStorage.setItem('hospitalId', res.data.id);
-//       navigate('/posts');
-//     } catch (err) {
-//       setMessage(err.response?.data?.msg || 'Something went wrong');
-//     }
-//   };
-
-//   return (
-//     <div className="container my-5">
-//       {token && (
-//         <div style={{ position: 'absolute', top: '20px', left: '20px', backgroundColor: '#f4f4f4', padding: '10px', color: 'black' }}>
-//           <h3>Token:</h3>
-//           <p>{token}</p>
-//         </div>
-//       )}
-//       <div className="row justify-content-center">
-//         <div
-//           className="col-md-6"
-//           style={{
-//             padding: '40px',
-//             backgroundColor: 'white',
-//             boxShadow: '0 4px 8px rgba(0,0,0,0.7)',
-//             borderRadius: '20px',
-//           }}
-//         >
-//           {message && (
-//             <div style={{ marginBottom: '20px', color: token ? '#00FF00' : 'red' }}>
-//               {message}
-//             </div>
-//           )}
-//           <form onSubmit={onSubmit}>
-//             <div className="text-center mb-4">
-//               <h1>Signup as {signupType === 'patient' ? 'Patient' : 'Hospital'}</h1>
-//             </div>
-//             <div className="mb-3">
-//               <input
-//                 type="text"
-//                 className="form-control"
-//                 placeholder={signupType === 'patient' ? 'Username' : 'Hospital Name'}
-//                 name="name"
-//                 value={formData.name}
-//                 onChange={onChange}
-//                 required
-//               />
-//             </div>
-//             <div className="mb-3">
-//               <input
-//                 type="email"
-//                 className="form-control"
-//                 placeholder="Email"
-//                 name="email"
-//                 value={formData.email}
-//                 onChange={onChange}
-//                 required
-//               />
-//             </div>
-//             <div className="row">
-//               <div className="col-6 mb-3">
-//                 <input
-//                   type="number"
-//                   className="form-control"
-//                   placeholder="Phone Number"
-//                   name="phoneNumber"
-//                   value={formData.phoneNumber}
-//                   onChange={onChange}
-//                   required
-//                 />
-//               </div>
-//               <div className="col-6 mb-3">
-//                 <input
-//                   type="text"
-//                   className="form-control"
-//                   placeholder="Address"
-//                   name="address"
-//                   value={formData.address}
-//                   onChange={onChange}
-//                   required
-//                 />
-//               </div>
-//             </div>
-//             <div className="row">
-//               <div className="col-6 mb-3">
-//                 <input
-//                   type="password"
-//                   className="form-control"
-//                   placeholder="Password"
-//                   name="password"
-//                   value={formData.password}
-//                   onChange={onChange}
-//                   required
-//                 />
-//               </div>
-//               <div className="col-6 mb-3">
-//                 <input
-//                   type="password"
-//                   className="form-control"
-//                   placeholder="Confirm Password"
-//                   name="confirmPassword"
-//                   value={formData.confirmPassword}
-//                   onChange={onChange}
-//                   required
-//                 />
-//               </div>
-//             </div>
-//             <div className="mb-3 form-check">
-//               <input type="checkbox" className="form-check-input" id="termsCheck" checked={termsChecked} onChange={toggleTerms} required />
-//               <label className="form-check-label" htmlFor="termsCheck">
-//                 I agree to the Terms and Conditions
-//               </label>
-//             </div>
-//             <button type="submit" className="btn btn-primary w-100" disabled={!termsChecked}>
-//               Signup
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Signup;
-
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -201,18 +7,47 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { loginSuccess } from '../../store/authSlice';
 
+
 const validationSchema = Yup.object({
-  username: Yup.string().min(3, 'Minimum 3 characters').required('Username is required'),
-  email: Yup.string().email('Invalid email').required('Email is required'),
+  username: Yup.string()
+    .trim()
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username cannot exceed 30 characters')
+    .matches(/^[a-zA-Z0-9_]+$/, 'Only alphanumeric characters and underscores are allowed')
+    .required('Username is required'),
+
+  email: Yup.string()
+    .trim()
+    .email('Invalid email format')
+    .max(254, 'Email cannot exceed 254 characters')
+    .required('Email is required'),
+
   phoneNumber: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Phone must be 10 digits')
+    .matches(/^[6-9]\d{9}$/, 'Phone must be a valid 10-digit Indian number')
     .required('Phone number is required'),
-  address: Yup.string().required('Address is required'),
-  password: Yup.string().min(6, 'Min 6 characters').required('Password is required'),
+
+  address: Yup.string()
+    .trim()
+    .min(5, 'Address must be at least 5 characters')
+    .max(200, 'Address cannot exceed 200 characters')
+    .required('Address is required'),
+
+  password: Yup.string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(64, 'Password cannot exceed 64 characters')
+    .matches(/[A-Z]/, 'At least one uppercase letter required')
+    .matches(/[a-z]/, 'At least one lowercase letter required')
+    .matches(/\d/, 'At least one number required')
+    .matches(/[@$!%*?&#]/, 'At least one special character required')
+    .required('Password is required'),
+
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Confirm Password is required'),
-  terms: Yup.boolean().oneOf([true], 'You must agree to the Terms and Conditions'),
+
+  terms: Yup.boolean()
+    .oneOf([true], 'You must agree to the Terms and Conditions')
+    .required('You must agree to the Terms and Conditions'),
 });
 
 const PatientSignup = () => {

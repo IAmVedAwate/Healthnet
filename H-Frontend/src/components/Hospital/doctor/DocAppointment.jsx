@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MedicalHistoryList from '../patient/MedicalHistory/MedicalHistoryList'; // Adjust the path if needed
+
 
 
 const priorityLabels = {
@@ -20,6 +22,8 @@ const DocAppointment = ({ doctorId }) => {
   const [selectedUrgency, setSelectedUrgency] = useState({});
   const [showUrgencyBox, setShowUrgencyBox] = useState(null);
   const { id: hospitalId } = useSelector((state) => state.auth);
+  const [viewHistoryFor, setViewHistoryFor] = useState(null);
+
 
   const fetchMyAppointments = async () => {
     try {
@@ -147,12 +151,21 @@ const DocAppointment = ({ doctorId }) => {
                     </button>
                   </div>
                 ) : (
-                  <button
+                    <>
+                    <button
                     onClick={() => setShowUrgencyBox(apt.appointmentId)}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
                   >
                     Assign Urgency
+                    </button>
+                    <button
+                    onClick={() => setViewHistoryFor(apt.patientId)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded ml-2"
+                  >
+                    View Medical History
                   </button>
+                    </>
+                  
                 )}
               </td>
             </tr>
@@ -162,7 +175,25 @@ const DocAppointment = ({ doctorId }) => {
         :
         <h1>No Appointments</h1>
       }
-      
+      {viewHistoryFor && (
+  <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center">
+    <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto p-6">
+      <button
+        onClick={() => setViewHistoryFor(null)}
+        className="absolute top-4 right-4 text-gray-500 hover:text-black"
+      >
+        ✕
+      </button>
+
+      <MedicalHistoryList
+        patientId={viewHistoryFor}
+        role="hospital"
+      />
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };

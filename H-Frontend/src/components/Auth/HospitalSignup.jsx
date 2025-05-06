@@ -15,16 +15,34 @@ const HospitalSignup = () => {
       contact: "",
     },
     validationSchema: Yup.object({
-      name: Yup.string().min(3, "Too short").required("Hospital name is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
-      location: Yup.string().required("Location is required"),
-      contact: Yup.string()
-        .matches(/^[0-9]{10}$/, "Contact must be 10 digits")
-        .required("Contact number is required"),
-      password: Yup.string().min(6, "Minimum 6 characters").required("Password is required"),
-      confirmPassword: Yup.string()
-        .oneOf([Yup.ref("password")], "Passwords must match")
-        .required("Confirm Password is required"),
+      name: Yup.string()
+      .matches(/^[A-Za-z0-9 .,'&()-]{3,50}$/, "Name must be 3–50 valid characters (no special symbols)")
+      .required("Hospital name is required"),
+  
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+  
+    location: Yup.string()
+      .matches(/^[A-Za-z0-9 .,'&()-]{3,100}$/, "Location must be valid text (3–100 characters)")
+      .required("Location is required"),
+  
+    contact: Yup.string()
+      .matches(/^[6-9]\d{9}$/, "Contact must be a valid 10-digit Indian mobile number")
+      .required("Contact number is required"),
+  
+    password: Yup.string()
+      .min(8, "Minimum 8 characters")
+      .max(64, "Maximum 64 characters")
+      .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+      .matches(/[a-z]/, "Must contain at least one lowercase letter")
+      .matches(/[0-9]/, "Must contain at least one number")
+      .matches(/[@$!%*?&]/, "Must contain at least one special character (@$!%*?&)")
+      .required("Password is required"),
+  
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref("password")], "Passwords must match")
+      .required("Confirm Password is required"),
     }),
     onSubmit: async (values, { setSubmitting, resetForm, setStatus }) => {
       try {

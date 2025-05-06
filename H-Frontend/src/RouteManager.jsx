@@ -30,6 +30,8 @@ import BookAppointment from './components/Hospital/patient/BookAppointment';
 import Navigation from './Navigation';
 import DoctorSelect from './components/Hospital/patient/doctorSelect';
 import MyAppointment from './components/Hospital/patient/MyAppointment';
+import InventoryDashboard from './components/Hospital/Inventory/InventoryDashboard';
+import MedicalHistoryUploadForm from './components/Hospital/patient/MedicalHistory/MedicalHistoryUploadForm';
 
 
 
@@ -65,21 +67,25 @@ const RouteManager = () => {
             <Route path="/patient/remove/:id" element={<DeletePatient />} />
 
             <Route path="/room/get" element={<ManageRooms />} />
-  <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
+            <Route path="/room/edit/:roomName/:roomId" element={<ManageBeds />} />
+            <Route path='/inventory' element={<InventoryDashboard />} />
+            
     </>
   )}
 
   {/* Patient routes */}
   {role === 'Patient' && (
     <>
-      <Route path='/patients' element={<Home />} />
+            <Route path='/patients' element={<Home />} />
             <Route path='/patients/book-appointment' element={<BookAppointment />} />
             <Route path='/patients/my-appointments' element={<MyAppointment /> } />
             <Route path='/doctor-select/:hospitalId' element={<DoctorSelect />} />
       <Route path="/patient/get" element={<GetAllPatients />} />
       <Route path="/patient/add" element={<AddPatient />} />
       <Route path="/patient/remove/:id" element={<DeletePatient />} />
-      <Route path="/patient/byId/:id" element={<GetPatientById />} />
+            <Route path="/patient/byId/:id" element={<GetPatientById />} />
+            <Route path='/upload' element={<MedicalHistoryUploadForm /> } />
+           
       
     </>
   )}
